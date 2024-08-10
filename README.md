@@ -9,7 +9,8 @@ ResoNet-Client is Electron based desktop app that provides an easy way to intera
 {
 	"username": "",
 	"password": "",
-	"totp": "" 
+	"totp": "",
+	"rememberMe": true
 }
 ```
 *TOTP  is only needed if you use TOTP on the account*
