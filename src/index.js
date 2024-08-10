@@ -1,9 +1,10 @@
 const ResoNetLib = require('resonet-lib');
-const config = require('./config.json');
 
 let client;
+let config;
 
 document.addEventListener('DOMContentLoaded', async () => {  
+    // Change this to look for a config if one isn't found it it doesn't need to exist/it makes one
     setupLoginScreen();
 });
 
@@ -12,20 +13,21 @@ function setupLoginScreen() {
     const password = document.getElementById("password");
     const login = document.getElementById("login");
 
-    if (config.rememberMe == true) {
-        username.value = config.username;
-        password.value = config.password;
+    if (config != null) {
+        if (config.rememberMe == true) {
+            username.value = config.username;
+            password.value = config.password;
+        }
     }
 
     login.addEventListener('click', async () => {
         login.disabled = true;
-        config.username = username.value;
-        config.password = password.value;
-
-        const loginData = {
+        
+        let loginData = {
             "username": `${username.value}`,
             "password": `${password.value}`,
-            "totp": ""
+            "totp": "",
+            "rememberMe": false
         }
 
         client = new ResoNetLib(loginData);
