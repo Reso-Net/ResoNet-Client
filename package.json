@@ -1,0 +1,14 @@
+{
+  "name": "resonet-client",
+  "version": "1.0.0",
+  "description": "Electron app that uses the ResoNet-Lib library to interact with the Resonite Api and SignalR endpoints",
+  "main": "main.js",
+  "author": "LeCloutPanda",
+  "scripts": {
+    "start": "electron ."
+  },
+  "license": "MIT",
+  "dependencies": {
+    "resonet-lib": "github:LeCloutPanda/ResoNet-Lib"
+  }
+}
