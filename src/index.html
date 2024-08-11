@@ -3,10 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/toast.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
         <title>ResoNet-Client</title>
+        <script src="index.js"></script>
     </head>
 
     <body>
@@ -19,9 +21,10 @@
             </form>
         </div>
 
+        <div id="toastContainer"></div>
+
         <div id="content" style="visibility: hidden; display: none;">
-            <p id="content.p">Welcome!</p>
+            <p>Welcome!</p>
         </div>
-        <script src="index.js"></script>
     </body>
 </html>

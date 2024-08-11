@@ -1,20 +1,37 @@
 const ResoNetLib = require('resonet-lib');
-const config = require('./config.json');
+const fs = require('fs').promises;
+const path = require('path');
 
 let client;
+let config; 
 
 document.addEventListener('DOMContentLoaded', async () => {  
-    setupLoginScreen();
+    await tryLoadConfig().then(json => {
+        config = json;
+    });
+
+    await setupLoginScreen();
 });
 
-function setupLoginScreen() {
+async function tryLoadConfig() {
+    const configFilePath = path.join(__dirname, 'config.json');
+    console.log("Looking for config in directory", configFilePath);
+
+    const data = await fs.readFile(configFilePath, 'utf8');
+    const json = JSON.parse(data);
+    return json;
+}
+
+async function setupLoginScreen() {
     const username = document.getElementById("username");
     const password = document.getElementById("password");
     const login = document.getElementById("login");
 
-    if (config.rememberMe == true) {
+    if (config && config.rememberMe) {
         username.value = config.username;
         password.value = config.password;
+    } else {
+        console.error("Failed reading rememberMe value in config");
     }
 
     login.addEventListener('click', async () => {
@@ -31,9 +48,7 @@ function setupLoginScreen() {
         client = new ResoNetLib(loginData);
         await client.start().finally(() => {
             hideLoginScreen();
-
-            const contentP = document.getElementById("content.p");
-            contentP.innerText = `Welcome ${client.data.userId}`;
+            showToast(`Success fully logged into ${client.data.userId}`)
         }).catch((error) => {
             showLoginScreen();
             console.error(error);
@@ -64,4 +79,26 @@ function hideLoginScreen() {
     const content = document.getElementById("content");
     content.style.visibility = "visible";
     content.style.display = "flex";
+}
+
+function showToast(message, duration = 3000) {
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    // Trigger the show animation
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Remove the toast after the specified duration
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+        });
+    }, duration);
 }
