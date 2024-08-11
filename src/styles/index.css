@@ -1,18 +1,20 @@
 * {
     font-family: 'Roboto', sans-serif;
+    color: #fff;
+    overflow: hidden;
 }
 
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    width: 100vw;
+    background-color: #393646;
     margin: 0;
 }
 
 #loginContainer {
-    background-color: #fff;
+    background-color: #4F4557;
+    position: absolute;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,7 +27,10 @@ body {
     gap: 8px;
     padding: 20px;
     border-radius: 4px;
-    overflow: hidden; /* Add this line */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #loginContainer input {
@@ -35,26 +40,33 @@ body {
     box-sizing: border-box;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #ccc;
+    background-color: #6D5D6E;
     border-radius: 4px;
 }
 
 #loginContainer button {
     width: 100%; 
     padding: 16px;
-    background-color: #007bff;
+    background-color: #4F4557;
     border: none;
     color: white;
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ccc;
+    border: 1px solid #6D5D6E;
     border-radius: 4px;
 }
 
 #loginContainer button:hover {
-    background-color: #3898ff;
+    background-color: #6D5D6E;
 }
 
 #loginContainer button:disabled {
-    background-color: #ccc;
+    background-color: #4F4557;
+}
+
+#content {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
 }

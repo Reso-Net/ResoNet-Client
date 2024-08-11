@@ -3,6 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/navbar.css">
+        <link rel="stylesheet" href="styles/tab.css">
         <link rel="stylesheet" href="styles/toast.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +14,7 @@
     </head>
 
     <body>
-        <div id="loginContainer">
+        <div id="loginContainer" style="visibility: visible; display: flex;">
             <h2>ResoNet</h2>
             <form id="loginForm">
                 <input type="text" id="username" placeholder="Username" required>
@@ -24,7 +26,23 @@
         <div id="toastContainer"></div>
 
         <div id="content" style="visibility: hidden; display: none;">
-            <p>Welcome!</p>
+            <div id="navbar">
+                <ul>
+                    <li><a href="#" data-page="home" class="active"><img src="./resources/home.svg" alt="Home Icon"></a></li>
+                    <li><a href="#" data-page="contacts" class="hidden"><img src="./resources/contacts.svg" alt="Contacts Icon"></a></li>
+                    <li><a href="#" data-page="worlds" class="hidden"><img src="./resources/public.svg" alt="Worlds Icon"></a></li>
+                    <li><a href="#" data-page="inventory" class="hidden"><img src="resources/folder_open.svg" alt="Inventory Icon"></a></li>
+                    <li><a href="#" data-page="settings" class="hidden"><img src="./resources/settings.svg" alt="Settings Icon"></a></li>
+                </ul>
+            </div>
+
+            <div id="tabs" style="flex-grow: 1;">
+                <div id="home" class="tab">Home</div>
+                <div id="contacts" class="tab">Contacts</div>
+                <div id="worlds" class="tab">Worlds</div>
+                <div id="inventory" class="tab">Inventory</div>
+                <div id="settings" class="tab">settings</div>
+            </div>
         </div>
     </body>
 </html>

@@ -1,0 +1,14 @@
+.tab {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 100%;
+}
+
+.tab.hidden {
+    display: none; /* Hide page when not active */
+}
+
+.tab.active {
+    display: flex; /* Show page when active */
+}

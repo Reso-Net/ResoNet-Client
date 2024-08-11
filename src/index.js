@@ -13,7 +13,41 @@ const LogLevels = {
     UNKNOWN: "unknown",
 }
 
+let pages;
+let tabs;
+
 document.addEventListener('DOMContentLoaded', async () => {  
+    pages = document.querySelectorAll('#navbar a');
+    tabs = document.querySelectorAll('.tab');
+
+    const switchTab = (tabId) => {
+        pages.forEach(page => {
+            page.classList.add('hidden');
+            page.classList.remove('active');
+            if (page.getAttribute('data-page') === tabId) {
+                page.classList.remove('hidden');
+                page.classList.add('active');
+            }
+        });
+
+        tabs.forEach(tab => {
+            tab.classList.add('hidden');
+            tab.classList.remove('active');
+            if (tab.id === tabId) {
+                tab.classList.remove('hidden');
+                tab.classList.add('active');
+            }
+        });
+    };
+
+    pages.forEach(page => {
+        page.addEventListener('click', (event) => {
+            event.preventDefault();
+            const tabId = event.target.closest('a').getAttribute('data-page');
+            switchTab(tabId);
+        });
+    });
+
     await tryLoadConfig().then(json => {
         config = json;
     });
@@ -39,6 +73,7 @@ async function setupLoginScreen() {
         username.value = config.username;
         password.value = config.password;
     } else {
+        showToast(LogLevels.WARNING, "Failed reading rememberMe, can't auto populate login page")
         console.error("Failed reading rememberMe value in config");
     }
 
@@ -90,50 +125,44 @@ function hideLoginScreen() {
     content.style.display = "flex";
 }
 
-function showToast(logLevel = LogLevels.UNKNOWN, message, duration = 3000) {
+function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000) {
     const toastContainer = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = 'toast';
 
-    // Create icon container
     const icon = document.createElement('img');
     icon.className = 'icon';
 
-    // Create message container
     const messageContainer = document.createElement('div');
-    messageContainer.textContent = message;
+    if (message == null) messageContainer.textContent = "Undefined";
+    else messageContainer.textContent = message;
 
     // Awful code please fix
+    // Move this to css to be used later
     if (logLevel == LogLevels.SUCCESS) {
         icon.src = "./resources/check_circle.svg";
         toast.style.backgroundColor = "#DEF2D6";
         toast.style.borderColor = "#586C50";
-        toast.style.color = "#586C50";
     } else if (logLevel == LogLevels.LOG) {
         icon.src = "./resources/info.svg";
         toast.style.backgroundColor = "#CCE8F4";
         toast.style.borderColor = "#4F81A4";
-        toast.style.color = "#4F81A4";
     } else if (logLevel == LogLevels.WARNING) {
         icon.src = "./resources/warning.svg";
         toast.style.backgroundColor = "#F8F3D6";
         toast.style.borderColor = "#8F723A";
-        toast.style.color = "#8F723A";
     } else if (logLevel == LogLevels.ERROR) {
         icon.src = "./resources/error.svg";
         toast.style.backgroundColor = "#EBC8C4";
         toast.style.borderColor = "#B64242";
-        toast.style.color = "#B64242";
     } else if (logLevel == LogLevels.UNKNOWN) {
         icon.src = "./resources/help.svg";
         toast.style.backgroundColor = "#FAFAFA";
         toast.style.borderColor = "#FFFFFF";
-        toast.style.color = "#FFFFFF";
     } else {
         icon.src = "./resources/help.svg";
         toast.style.backgroundColor = "#FAFAFA";
         toast.style.borderColor = "#FFFFFF";
-        toast.style.color = "#FFFFFF";
     }
 
     toast.appendChild(icon);
@@ -141,12 +170,10 @@ function showToast(logLevel = LogLevels.UNKNOWN, message, duration = 3000) {
 
     toastContainer.appendChild(toast);
 
-    // Trigger the show animation
     requestAnimationFrame(() => {
         toast.classList.add('show');
     });
 
-    // Remove the toast after the specified duration
     setTimeout(() => {
         toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
