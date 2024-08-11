@@ -1,14 +1,23 @@
 .tab {
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     height: 100%;
 }
 
+.tab div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
 .tab.hidden {
-    display: none; /* Hide page when not active */
+    display: none;
+    visibility: hidden;
 }
 
 .tab.active {
-    display: flex; /* Show page when active */
+    display: flex;
+    flex-direction: column;
+    visibility: visible;
 }

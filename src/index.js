@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    switchTab("home");
+
     await tryLoadConfig().then(json => {
         config = json;
     });
@@ -180,4 +182,35 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
             toast.remove();
         });
     }, duration);
+}
+
+async function listWorlds() {
+    // Fetch current sessions
+    let sessions = await client.fetchSessions();
+    while (sessions.firstChild) { 
+        sessions.removeChild(sessions.firstChild); 
+    }
+
+    sessions.forEach(session => {
+        const sessionsContainer = document.getElementById('sessions');
+        const sessionItem = document.createElement('div');
+        sessionItem.className = 'session';
+    
+        const sessionThumbnail = document.createElement('img');
+        sessionThumbnail.src = session.thumbnailUrl ?? "./resources/point.png";
+        sessionItem.appendChild(sessionThumbnail);
+    
+        const sessionInformation = document.createElement('p');
+        let string = `Name: ${sanatizeString(session.name)}<br>`;
+        string += `Host: ${session.hostUsername}<br>`;
+        string += `Users: ${session.activeUsers}/${session.maxUsers}`;
+        sessionInformation.innerHTML = string;
+        sessionItem.appendChild(sessionInformation);
+    
+        sessionsContainer.appendChild(sessionItem);
+    });
+}
+
+function sanatizeString(string) {
+    return string.replace(/<.*?>/g, '');
 }
