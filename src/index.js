@@ -19,7 +19,7 @@ let tabs;
 document.addEventListener('DOMContentLoaded', async () => {  
     pages = document.querySelectorAll('#navbar a');
     tabs = document.querySelectorAll('.tab');
-
+    
     const switchTab = (tabId) => {
         pages.forEach(page => {
             page.classList.add('hidden');
@@ -187,6 +187,8 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
 async function listWorlds() {
     // Fetch current sessions
     let sessions = await client.fetchSessions();
+    sessions.sort((a, b) => b.activeUsers - a.activeUsers);
+
     while (sessions.firstChild) { 
         sessions.removeChild(sessions.firstChild); 
     }
@@ -197,7 +199,7 @@ async function listWorlds() {
         sessionItem.className = 'session';
     
         const sessionThumbnail = document.createElement('img');
-        sessionThumbnail.src = session.thumbnailUrl ?? "./resources/point.png";
+        sessionThumbnail.src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
         sessionItem.appendChild(sessionThumbnail);
     
         const sessionInformation = document.createElement('p');

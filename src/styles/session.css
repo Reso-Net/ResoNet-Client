@@ -21,10 +21,9 @@
     display: flex;
     flex-direction: column;
     width: calc(100vw / 6);
-    max-height: calc(100vh / 6);
     padding: 16px;
-    align-items: stretch;
     gap: 8px;
+    align-items: stretch;
     justify-content: space-between;
 }
 
@@ -32,12 +31,13 @@
     margin: 0;
     padding: 16px;
     background-color: #6D5D6E;
+    border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .session img {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
-    height: 50%;
+    height: auto;
     border-radius: 8px;
 }

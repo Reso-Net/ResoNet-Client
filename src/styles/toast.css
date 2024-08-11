@@ -20,6 +20,7 @@
     transition: opacity 0.5s ease, transform 0.5s ease;
     transform: translateY(20px);
     gap: 8px;
+    max-width: calc(100vw / 4);
 }
 
 .toast div {
