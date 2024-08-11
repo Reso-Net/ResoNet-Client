@@ -6,11 +6,16 @@
 }
 
 .toast {
+    display: flex;
+    align-items: center;
     background-color: #333;
     color: #fff;
-    padding: 10px 20px;
+    padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transition: opacity 0.5s ease, transform 0.5s ease;
     transform: translateY(20px);
@@ -19,4 +24,10 @@
 .toast.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+.toast .icon {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
 }

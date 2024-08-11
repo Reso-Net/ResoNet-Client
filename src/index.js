@@ -5,6 +5,14 @@ const path = require('path');
 let client;
 let config; 
 
+const LogLevels = {
+    SUCCESS: "success",
+    LOG: "log",
+    WARNING: "warning",
+    ERROR: "error",
+    UNKNOWN: "unknown",
+}
+
 document.addEventListener('DOMContentLoaded', async () => {  
     await tryLoadConfig().then(json => {
         config = json;
@@ -46,11 +54,12 @@ async function setupLoginScreen() {
         }
 
         client = new ResoNetLib(loginData);
-        await client.start().finally(() => {
+        await client.start().then(() => {
             hideLoginScreen();
-            showToast(`Success fully logged into ${client.data.userId}`)
+            showToast(LogLevels.SUCCESS, `Success fully logged into ${client.data.userId}`)
         }).catch((error) => {
             showLoginScreen();
+            showToast(LogLevels.ERROR, `Failed logging in: ${error}`)
             console.error(error);
         });
     });
@@ -81,11 +90,54 @@ function hideLoginScreen() {
     content.style.display = "flex";
 }
 
-function showToast(message, duration = 3000) {
+function showToast(logLevel = LogLevels.UNKNOWN, message, duration = 3000) {
     const toastContainer = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.textContent = message;
+
+    // Create icon container
+    const icon = document.createElement('img');
+    icon.className = 'icon';
+
+    // Create message container
+    const messageContainer = document.createElement('div');
+    messageContainer.textContent = message;
+
+    // Awful code please fix
+    if (logLevel == LogLevels.SUCCESS) {
+        icon.src = "./resources/check_circle.svg";
+        toast.style.backgroundColor = "#DEF2D6";
+        toast.style.borderColor = "#586C50";
+        toast.style.color = "#586C50";
+    } else if (logLevel == LogLevels.LOG) {
+        icon.src = "./resources/info.svg";
+        toast.style.backgroundColor = "#CCE8F4";
+        toast.style.borderColor = "#4F81A4";
+        toast.style.color = "#4F81A4";
+    } else if (logLevel == LogLevels.WARNING) {
+        icon.src = "./resources/warning.svg";
+        toast.style.backgroundColor = "#F8F3D6";
+        toast.style.borderColor = "#8F723A";
+        toast.style.color = "#8F723A";
+    } else if (logLevel == LogLevels.ERROR) {
+        icon.src = "./resources/error.svg";
+        toast.style.backgroundColor = "#EBC8C4";
+        toast.style.borderColor = "#B64242";
+        toast.style.color = "#B64242";
+    } else if (logLevel == LogLevels.UNKNOWN) {
+        icon.src = "./resources/help.svg";
+        toast.style.backgroundColor = "#FAFAFA";
+        toast.style.borderColor = "#FFFFFF";
+        toast.style.color = "#FFFFFF";
+    } else {
+        icon.src = "./resources/help.svg";
+        toast.style.backgroundColor = "#FAFAFA";
+        toast.style.borderColor = "#FFFFFF";
+        toast.style.color = "#FFFFFF";
+    }
+
+    toast.appendChild(icon);
+    toast.appendChild(messageContainer);
 
     toastContainer.appendChild(toast);
 
