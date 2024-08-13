@@ -5,8 +5,8 @@
         <link rel="stylesheet" href="styles/index.css">
         <link rel="stylesheet" href="styles/navbar.css">
         <link rel="stylesheet" href="styles/session.css">
-        <link rel="stylesheet" href="styles/tab.css">
         <link rel="stylesheet" href="styles/toast.css">
+        <link rel="stylesheet" href="styles/tab.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -37,13 +37,15 @@
                 </ul>
             </div>
 
-            <div id="tabs" style="flex-grow: 1;">
+            <div id="tabs">
                 <div id="home" class="tab">Home</div>
                 <div id="contacts" class="tab">Contacts</div>
                 <div id="worlds" class="tab">
-                    <h1>Sessions</h1>
+                    <div style="display: flex; flex-direction: row; gap: 8px;" onclick="listWorlds()">
+                        <h1>Sessions</h1>   
+                        <img src="./resources/refresh.svg">
+                    </div>
                     <div id="sessions"></div>
-                    <button onclick="listWorlds()">Refresh Worlds</button>
                 </div>
                 <div id="inventory" class="tab">Inventory</div>
                 <div id="settings" class="tab">settings</div>

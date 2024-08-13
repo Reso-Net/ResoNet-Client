@@ -214,5 +214,5 @@ async function listWorlds() {
 }
 
 function sanatizeString(string) {
-    return string.replace(/<.*?>/g, '');
+    return string.replace(/<.*?>/g, '').replace(/[^\w\s\-@.]/g, '').replace(/\s{2,}/g, ' ').trim();
 }

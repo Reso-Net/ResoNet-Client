@@ -1,3 +1,7 @@
+#tabs {
+    flex-grow: 1;
+}
+
 .tab {
     display: flex;
     justify-content: center;
