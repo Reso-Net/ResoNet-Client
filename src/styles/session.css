@@ -1,6 +1,7 @@
 #worlds {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 #sessions {
@@ -18,13 +19,10 @@
     color: #fff;
     border-radius: 8px;
     border-style: none;
-    display: flex;
-    flex-direction: column;
     width: calc(100vw / 6);
     padding: 16px;
     gap: 8px;
     align-items: stretch;
-    justify-content: space-between;
 }
 
 .session p {

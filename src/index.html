@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/login.css">
         <link rel="stylesheet" href="styles/navbar.css">
         <link rel="stylesheet" href="styles/session.css">
         <link rel="stylesheet" href="styles/toast.css">
@@ -41,9 +42,10 @@
                 <div id="home" class="tab">Home</div>
                 <div id="contacts" class="tab">Contacts</div>
                 <div id="worlds" class="tab">
-                    <div style="display: flex; flex-direction: row; gap: 8px;" onclick="listWorlds()">
+                    <div style="display: flex; flex-direction: row; gap: 8px;">
                         <h1>Sessions</h1>   
-                        <img src="./resources/refresh.svg">
+                        <img onclick="listWorlds()" src="./resources/refresh.svg" style="cursor: pointer; max-width: 32px;">
+                        <input type="checkbox" id="hideEmptySessions" value="true"checked="checked">
                     </div>
                     <div id="sessions"></div>
                 </div>

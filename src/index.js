@@ -185,34 +185,50 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
 }
 
 async function listWorlds() {
+    const sessionsContainer = document.getElementById('sessions');
+    const hideEmtpySessions = document.getElementById("hideEmptySessions");
+    
+    while (sessionsContainer.firstChild) { 
+        sessionsContainer.removeChild(sessionsContainer.firstChild); 
+    }
+
     // Fetch current sessions
     let sessions = await client.fetchSessions();
     sessions.sort((a, b) => b.activeUsers - a.activeUsers);
-
-    while (sessions.firstChild) { 
-        sessions.removeChild(sessions.firstChild); 
-    }
+    console.log(hideEmtpySessions.value);
 
     sessions.forEach(session => {
-        const sessionsContainer = document.getElementById('sessions');
+        if (hideEmtpySessions.checked && session.activeUsers == 0) {
+            return;
+        }
+
         const sessionItem = document.createElement('div');
         sessionItem.className = 'session';
     
         const sessionThumbnail = document.createElement('img');
         sessionThumbnail.src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
+        sessionThumbnail.id = "Session Thumbnail";
         sessionItem.appendChild(sessionThumbnail);
     
-        const sessionInformation = document.createElement('p');
-        let string = `Name: ${sanatizeString(session.name)}<br>`;
-        string += `Host: ${session.hostUsername}<br>`;
-        string += `Users: ${session.activeUsers}/${session.maxUsers}`;
-        sessionInformation.innerHTML = string;
-        sessionItem.appendChild(sessionInformation);
-    
+        const sessionName = document.createElement('p');
+        sessionName.innerHTML = `Name: ${sanatizeString(session.name)}`;
+        sessionName.id = "Session Name";
+        sessionItem.appendChild(sessionName);
+        
+        const sessionHost = document.createElement('p');
+        sessionHost.innerHTML = `Host: ${sanatizeString(session.hostUsername)}`;
+        sessionHost.id = "Session Host";
+        sessionItem.appendChild(sessionHost);
+        
+        const sessionUsers = document.createElement('p');
+        sessionUsers.innerHTML = `Users: ${session.activeUsers}/${session.maxUsers}`;
+        sessionUsers.id = "Session Users";
+        sessionItem.appendChild(sessionUsers);
+
         sessionsContainer.appendChild(sessionItem);
     });
 }
 
 function sanatizeString(string) {
-    return string.replace(/<.*?>/g, '').replace(/[^\w\s\-@.]/g, '').replace(/\s{2,}/g, ' ').trim();
+    return string.replace(/<.*?>/g, '').trim();
 }
