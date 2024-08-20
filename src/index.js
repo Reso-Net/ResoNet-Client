@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 let client;
+let contacts = {};
 let config; 
 
 const LogLevels = {
@@ -55,6 +56,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     await setupLoginScreen();
+
+    document.getElementById("refreshSessions").addEventListener('click', async () => {
+        await listWorlds();
+    });
 });
 
 async function tryLoadConfig() {
@@ -93,7 +98,7 @@ async function setupLoginScreen() {
         client = new ResoNetLib(loginData);
         await client.start().then(() => {
             hideLoginScreen();
-            showToast(LogLevels.SUCCESS, `Success fully logged into ${client.data.userId}`)
+            showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
         }).catch((error) => {
             showLoginScreen();
             showToast(LogLevels.ERROR, `Failed logging in: ${error}`)
@@ -192,10 +197,8 @@ async function listWorlds() {
         sessionsContainer.removeChild(sessionsContainer.firstChild); 
     }
 
-    // Fetch current sessions
-    let sessions = await client.fetchSessions();
+    let sessions = client.data.sessions;
     sessions.sort((a, b) => b.activeUsers - a.activeUsers);
-    console.log(hideEmtpySessions.value);
 
     sessions.forEach(session => {
         if (hideEmtpySessions.checked && session.activeUsers == 0) {
@@ -204,29 +207,120 @@ async function listWorlds() {
 
         const sessionItem = document.createElement('div');
         sessionItem.className = 'session';
+        sessionItem.id = session.sessionId;
     
-        const sessionThumbnail = document.createElement('img');
-        sessionThumbnail.src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
-        sessionThumbnail.id = "Session Thumbnail";
-        sessionItem.appendChild(sessionThumbnail);
-    
-        const sessionName = document.createElement('p');
-        sessionName.innerHTML = `Name: ${sanatizeString(session.name)}`;
-        sessionName.id = "Session Name";
-        sessionItem.appendChild(sessionName);
+        const thumbnailContainer = document.createElement('div');
+        thumbnailContainer.id = "SessionThumbnailContainer";
+
+        const thumbnail = document.createElement('img');
+        thumbnail.id = "SessionThumbnail";
+        thumbnail.src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
+
+        if (session.thumbnailUrl) {
+            const copyThumbnail = document.createElement('img');
+            copyThumbnail.id = "copy";
+            copyThumbnail.className = "interactableButton";
+            copyThumbnail.src = "./resources/content_copy.svg";
+            copyThumbnail.style.maxWidth = copyThumbnail.style.maxHeight = copyThumbnail.style.minWidth = copyThumbnail.style.minHeight = "24px";
+            copyThumbnail.addEventListener('click', () => {
+                navigator.clipboard.writeText(thumbnail.src);
+                showToast(LogLevels.LOG, "Copied session thumbnail to clipboard");
+            });
+            thumbnailContainer.appendChild(copyThumbnail);
+
+            const previewThumbnail = document.createElement('img');
+            previewThumbnail.id = "preview";
+            previewThumbnail.className = "interactableButton";
+            previewThumbnail.src = "./resources/3d_rotation.svg";
+            previewThumbnail.style.maxWidth = previewThumbnail.style.maxHeight = previewThumbnail.style.minWidth = previewThumbnail.style.minHeight = "24px";
+            previewThumbnail.addEventListener('click', () => {
+                show360Viewer(thumbnail.src);
+                showToast(LogLevels.LOG, "Opening thumbnail in 3D viewer");
+            });
+            thumbnailContainer.appendChild(previewThumbnail);
+        }
+
+        thumbnailContainer.appendChild(thumbnail);
+        sessionItem.appendChild(thumbnailContainer);
+
+        const name = document.createElement('p');
+        name.id = "SessionName";
+        name.innerHTML = `${sanatizeString(session.name)}, ${session.activeUsers}/${session.maxUsers}`;
+        sessionItem.appendChild(name);
         
-        const sessionHost = document.createElement('p');
-        sessionHost.innerHTML = `Host: ${sanatizeString(session.hostUsername)}`;
-        sessionHost.id = "Session Host";
-        sessionItem.appendChild(sessionHost);
-        
-        const sessionUsers = document.createElement('p');
-        sessionUsers.innerHTML = `Users: ${session.activeUsers}/${session.maxUsers}`;
-        sessionUsers.id = "Session Users";
-        sessionItem.appendChild(sessionUsers);
+        const users = document.createElement('p');
+        users.id = "SessionUsers";
+        const sessionUsers = session.sessionUsers;
+        var string = "";
+        for (let index = 0; index < sessionUsers.length; index++) {
+            const user = sessionUsers[index];
+            const isContact = client.data.contacts.some(contact => user.userID === contact.id);
+
+            if (isContact && user.isPresent == true) {
+                console.log("Contact + Present");
+                string += `<span style='color: #2ee860'>${sanatizeString(user.username)}</span>`;
+            } else if (isContact && user.isPresent == false) {
+                console.log("Contact + Not Present");
+                string += `<span style='color: #2fa84f'>${sanatizeString(user.username)}</span>`;
+            } else if (user.isPresent == false) {
+                console.log("Not Present");
+                string += `<span style='color: #b8b8b8'>${sanatizeString(user.username)}</span>`;
+            } else {
+                string += `${sanatizeString(user.username)}`;
+            }
+            
+            if (index != sessionUsers.length - 1) {
+                string += ", ";
+            }
+        }
+        users.innerHTML = `${string}`;
+        sessionItem.appendChild(users);
 
         sessionsContainer.appendChild(sessionItem);
     });
+}
+
+function show360Viewer(thumbnail) {
+    const viewer = document.getElementById("thumbnailViewer");
+    viewer.style.visibility = "visible";
+    viewer.style.display = "flex";
+
+    viewer.querySelector("#thumbnailViewerThumbnail").src = thumbnail;
+}
+
+function close360Viewer() {
+    const viewer = document.getElementById("thumbnailViewer");
+    viewer.style.visibility = "hidden";
+    viewer.style.display = "none";
+}
+
+// Unused as of now
+async function updateSessionItem(session) {
+    const sessionItem = document.getElementById(session.sessionId);
+    sessionItem.querySelector("#SessionThumbnail").src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
+    sessionItem.querySelector("#SessionName").innerHTML = `${sanatizeString(session.name)}, ${session.activeUsers}/${session.maxUsers}`;
+    
+    const sessionUsers = session.sessionUsers;
+    var string = "";
+    for (let index = 0; index < sessionUsers.length; index++) {
+        const element = sessionUsers[index];
+        const isContact = client.data.contacts.some(contact => element.userID === contact.id);
+        
+        if (isContact && element.isPresent == true) {
+            string += `<span style='color: #2ee860'>${element.username}</span>`;
+        } else if (isContact && element.isPresent == false) {
+            string += `<span style='color: #2fa84f'>${element.username}</span>`;
+        } else if (element.isPresent == false) {
+            string += `<span style='color: #b8b8b8'>${element.username}</span>`;
+        } else {
+            string += `${element.username}`;
+        }
+        
+        if (index != sessionUsers.length - 1) {
+            string += ", ";
+        }
+    }
+    sessionItem.querySelector("#SessionUsers").innerHTML = `${sanatizeString(string)}`;
 }
 
 function sanatizeString(string) {

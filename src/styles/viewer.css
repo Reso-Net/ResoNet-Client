@@ -1,0 +1,29 @@
+.thumbnailViewer {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4F4557;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#thumbnailViewer {
+    position: absolute;
+    background-color: #4F45579f;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+}
+
+.thumbnailViewer .interactableButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

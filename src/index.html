@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/viewer.css">
         <link rel="stylesheet" href="styles/login.css">
         <link rel="stylesheet" href="styles/navbar.css">
         <link rel="stylesheet" href="styles/session.css">
@@ -25,16 +26,23 @@
             </form>
         </div>
 
+        <div id="thumbnailViewer" style="visibility: hidden; display: none;">
+            <div class="thumbnailViewer" id="360Viewer">
+                <img src="./resources/close.svg" alt="Close 360 Viewer" class="interactableButton" onclick="close360Viewer()">
+                <img id="thumbnailViewerThumbnail" alt="Session Thumbnail">
+            </div>
+        </div>
+
         <div id="toastContainer"></div>
 
         <div id="content" style="visibility: hidden; display: none;">
             <div id="navbar">
                 <ul>
-                    <li><a href="#" data-page="home" class="active"><img src="./resources/home.svg" alt="Home Icon"></a></li>
-                    <li><a href="#" data-page="contacts" class="hidden"><img src="./resources/contacts.svg" alt="Contacts Icon"></a></li>
-                    <li><a href="#" data-page="worlds" class="hidden"><img src="./resources/public.svg" alt="Worlds Icon"></a></li>
-                    <li><a href="#" data-page="inventory" class="hidden"><img src="resources/folder_open.svg" alt="Inventory Icon"></a></li>
-                    <li><a href="#" data-page="settings" class="hidden"><img src="./resources/settings.svg" alt="Settings Icon"></a></li>
+                    <li><a href="#" data-page="home" class="active"><img src="./resources/home.svg" class="interactableButton" alt="Home Icon"></a></li>
+                    <li><a href="#" data-page="contacts" class="hidden"><img src="./resources/contacts.svg" class="interactableButton" alt="Contacts Icon"></a></li>
+                    <li><a href="#" data-page="worlds" class="hidden"><img src="./resources/public.svg" class="interactableButton" alt="Worlds Icon"></a></li>
+                    <li><a href="#" data-page="inventory" class="hidden"><img src="resources/folder_open.svg" class="interactableButton" alt="Inventory Icon"></a></li>
+                    <li><a href="#" data-page="settings" class="hidden"><img src="./resources/settings.svg" class="interactableButton" alt="Settings Icon"></a></li>
                 </ul>
             </div>
 
@@ -42,9 +50,9 @@
                 <div id="home" class="tab">Home</div>
                 <div id="contacts" class="tab">Contacts</div>
                 <div id="worlds" class="tab">
-                    <div style="display: flex; flex-direction: row; gap: 8px;">
+                    <div style="display: flex; flex-direction: row; gap: 8px; min-height: 64px; align-items: center; height: 64px;">
                         <h1>Sessions</h1>   
-                        <img onclick="listWorlds()" src="./resources/refresh.svg" style="cursor: pointer; max-width: 32px;">
+                        <img id="refreshSessions" src="./resources/refresh.svg" class="interactableButton" style="cursor: pointer; max-width: 32px;">
                         <input type="checkbox" id="hideEmptySessions" value="true"checked="checked">
                     </div>
                     <div id="sessions"></div>

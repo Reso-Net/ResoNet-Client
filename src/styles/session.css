@@ -1,7 +1,7 @@
 #worlds {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    justify-content: flex-start;
 }
 
 #sessions {
@@ -11,7 +11,22 @@
     justify-content: center;
     gap: 8px;
     overflow-y: auto;  
-    flex-grow: 1;
+}
+
+#SessionThumbnailContainer {
+    position: relative;
+}
+
+#SessionThumbnailContainer #copy {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#SessionThumbnailContainer #preview {
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 .session {

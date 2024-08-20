@@ -1,6 +1,8 @@
 * {
     font-family: 'Roboto', sans-serif;
     color: #fff;
+    overflow: hidden;
+    fill: #fff;
 }
 
 body {
@@ -38,4 +40,18 @@ body {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
+}
+
+.interactableButton {
+    cursor: pointer;
+    fill: #6D5D6E;
+    padding: 4px;
+    opacity: 50%;
+    transition: 250ms ease-in-out;
+}
+
+.interactableButton:hover {
+    cursor: pointer;
+    fill: #fff;
+    opacity: 100%;
 }
