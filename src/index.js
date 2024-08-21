@@ -257,13 +257,10 @@ async function listWorlds() {
             const isContact = client.data.contacts.some(contact => user.userID === contact.id);
 
             if (isContact && user.isPresent == true) {
-                console.log("Contact + Present");
                 string += `<span style='color: #2ee860'>${sanatizeString(user.username)}</span>`;
             } else if (isContact && user.isPresent == false) {
-                console.log("Contact + Not Present");
                 string += `<span style='color: #2fa84f'>${sanatizeString(user.username)}</span>`;
             } else if (user.isPresent == false) {
-                console.log("Not Present");
                 string += `<span style='color: #b8b8b8'>${sanatizeString(user.username)}</span>`;
             } else {
                 string += `${sanatizeString(user.username)}`;
@@ -281,17 +278,23 @@ async function listWorlds() {
 }
 
 function show360Viewer(thumbnail) {
-    const viewer = document.getElementById("thumbnailViewer");
+    const viewer = document.getElementById("viewer");
     viewer.style.visibility = "visible";
     viewer.style.display = "flex";
+    
+    updateThumbnail(thumbnail);
+    
+    document.getElementById("body").className = "non-select"
 
-    viewer.querySelector("#thumbnailViewerThumbnail").src = thumbnail;
+    //viewer.querySelector("#thumbnailViewerThumbnail").src = thumbnail;
 }
 
 function close360Viewer() {
-    const viewer = document.getElementById("thumbnailViewer");
+    const viewer = document.getElementById("viewer");
     viewer.style.visibility = "hidden";
     viewer.style.display = "none";
+
+    document.getElementById("body").className = "select"
 }
 
 // Unused as of now

@@ -12,18 +12,20 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-}
-
-#thumbnailViewer {
-    position: absolute;
-    background-color: #4F45579f;
-    width: 100vw;
-    height: 100vh;
-    z-index: 999;
+    width: calc(calc(100vw / 2));
+    height: calc(calc(100vw / 2) / 2);
 }
 
 .thumbnailViewer .interactableButton {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.non-select {
+    user-select: none;
+}
+
+.select {
+    user-select: text;
 }

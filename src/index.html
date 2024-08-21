@@ -9,14 +9,16 @@
         <link rel="stylesheet" href="styles/session.css">
         <link rel="stylesheet" href="styles/toast.css">
         <link rel="stylesheet" href="styles/tab.css">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        
         <title>ResoNet-Client</title>
         <script src="index.js"></script>
     </head>
 
-    <body>
+    <body id="body">
         <div id="loginContainer" style="visibility: visible; display: flex;">
             <h2>ResoNet</h2>
             <form id="loginForm">
@@ -26,11 +28,8 @@
             </form>
         </div>
 
-        <div id="thumbnailViewer" style="visibility: hidden; display: none;">
-            <div class="thumbnailViewer" id="360Viewer">
-                <img src="./resources/close.svg" alt="Close 360 Viewer" class="interactableButton" onclick="close360Viewer()">
-                <img id="thumbnailViewerThumbnail" alt="Session Thumbnail">
-            </div>
+        <div class="thumbnailViewer" id="viewer" style="visibility: hidden;">
+            <img src="./resources/close.svg" alt="Close 360 Viewer" class="interactableButton" onclick="close360Viewer()">
         </div>
 
         <div id="toastContainer"></div>
@@ -61,5 +60,7 @@
                 <div id="settings" class="tab">settings</div>
             </div>
         </div>
+
+        <script src="360viewer.js"></script>
     </body>
 </html>
