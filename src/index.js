@@ -285,8 +285,6 @@ function show360Viewer(thumbnail) {
     updateThumbnail(thumbnail);
     
     document.getElementById("body").className = "non-select"
-
-    //viewer.querySelector("#thumbnailViewerThumbnail").src = thumbnail;
 }
 
 function close360Viewer() {
