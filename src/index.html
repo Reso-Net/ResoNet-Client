@@ -18,7 +18,7 @@
         <script src="index.js"></script>
     </head>
 
-    <body id="body">
+    <body>
         <div id="loginContainer" style="visibility: visible; display: flex;">
             <h2>ResoNet</h2>
             <form id="loginForm">
@@ -28,8 +28,10 @@
             </form>
         </div>
 
-        <div class="thumbnailViewer" id="viewer" style="visibility: hidden;">
-            <img src="./resources/close.svg" alt="Close 360 Viewer" class="interactableButton" onclick="close360Viewer()">
+        <div id="viewerContainer" style="visibility: hidden;">
+            <div class="thumbnailViewer" id="viewer">
+                <img src="./resources/close.svg" alt="Close 360 Viewer" class="interactableButton" onclick="close360Viewer()">
+            </div>    
         </div>
 
         <div id="toastContainer"></div>

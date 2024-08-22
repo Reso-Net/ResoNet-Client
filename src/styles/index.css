@@ -1,8 +1,8 @@
 * {
     font-family: 'Roboto', sans-serif;
-    color: #fff;
     overflow: hidden;
-    fill: #fff;
+    color: #fff;
+    user-select: none;
 }
 
 body {

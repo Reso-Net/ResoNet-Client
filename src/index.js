@@ -278,21 +278,17 @@ async function listWorlds() {
 }
 
 function show360Viewer(thumbnail) {
-    const viewer = document.getElementById("viewer");
+    const viewer = document.getElementById("viewerContainer");
     viewer.style.visibility = "visible";
     viewer.style.display = "flex";
     
     updateThumbnail(thumbnail);
-    
-    document.getElementById("body").className = "non-select"
 }
 
 function close360Viewer() {
-    const viewer = document.getElementById("viewer");
+    const viewer = document.getElementById("viewerContainer");
     viewer.style.visibility = "hidden";
     viewer.style.display = "none";
-
-    document.getElementById("body").className = "select"
 }
 
 // Unused as of now

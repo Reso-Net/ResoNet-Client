@@ -12,20 +12,21 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    width: calc(calc(100vw / 2));
-    height: calc(calc(100vw / 2) / 2);
+    width: calc(calc(100vw / 2) + calc(100vw / 4));
+    height: calc((calc(100vw / 2) + calc(100vw / 4)) / 2 );
+}
+
+#viewerContainer {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    background-color: #4F455780;
+    z-index: 999;
 }
 
 .thumbnailViewer .interactableButton {
     position: absolute;
     top: 0;
     right: 0;
-}
-
-.non-select {
-    user-select: none;
-}
-
-.select {
-    user-select: text;
 }
