@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await setupLoginScreen();
 
     document.getElementById("refreshSessions").addEventListener('click', async () => {
-        await listWorlds();
+        await manualRefreshSessions();
     });
 });
 
@@ -99,6 +99,14 @@ async function setupLoginScreen() {
         await client.start().then(() => {
             hideLoginScreen();
             showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
+            
+            client.on("sessionUpdateEvent", async (session) => {
+                const worldsTab = document.getElementById("worlds");
+
+                if (worldsTab.className.includes("active")) {
+                    handleSessionUpdate(session);
+                }
+            });    
         }).catch((error) => {
             showLoginScreen();
             showToast(LogLevels.ERROR, `Failed logging in: ${error}`)
@@ -189,92 +197,23 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
     }, duration);
 }
 
-async function listWorlds() {
-    const sessionsContainer = document.getElementById('sessions');
-    const hideEmtpySessions = document.getElementById("hideEmptySessions");
-    
-    while (sessionsContainer.firstChild) { 
-        sessionsContainer.removeChild(sessionsContainer.firstChild); 
+// Broken
+async function getStatusColour(user) {
+    var string = "";
+
+    const isContact = client.data.contacts.some(contact => user.userID === contact.id);
+        
+    if (isContact && user.isPresent == true) {
+        string += `<span style='color: #2ee860'>${user.username}</span>`;
+    } else if (isContact && user.isPresent == false) {
+        string += `<span style='color: #2fa84f'>${user.username}</span>`;
+    } else if (user.isPresent == false) {
+        string += `<span style='color: #b8b8b8'>${user.username}</span>`;
+    } else {
+        string += `${user.username}`;
     }
 
-    let sessions = client.data.sessions;
-    sessions.sort((a, b) => b.activeUsers - a.activeUsers);
-
-    sessions.forEach(session => {
-        if (hideEmtpySessions.checked && session.activeUsers == 0) {
-            return;
-        }
-
-        const sessionItem = document.createElement('div');
-        sessionItem.className = 'session';
-        sessionItem.id = session.sessionId;
-    
-        const thumbnailContainer = document.createElement('div');
-        thumbnailContainer.id = "SessionThumbnailContainer";
-
-        const thumbnail = document.createElement('img');
-        thumbnail.id = "SessionThumbnail";
-        thumbnail.src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
-
-        if (session.thumbnailUrl) {
-            const copyThumbnail = document.createElement('img');
-            copyThumbnail.id = "copy";
-            copyThumbnail.className = "interactableButton";
-            copyThumbnail.src = "./resources/content_copy.svg";
-            copyThumbnail.style.maxWidth = copyThumbnail.style.maxHeight = copyThumbnail.style.minWidth = copyThumbnail.style.minHeight = "24px";
-            copyThumbnail.addEventListener('click', () => {
-                navigator.clipboard.writeText(thumbnail.src);
-                showToast(LogLevels.LOG, "Copied session thumbnail to clipboard");
-            });
-            thumbnailContainer.appendChild(copyThumbnail);
-
-            const previewThumbnail = document.createElement('img');
-            previewThumbnail.id = "preview";
-            previewThumbnail.className = "interactableButton";
-            previewThumbnail.src = "./resources/3d_rotation.svg";
-            previewThumbnail.style.maxWidth = previewThumbnail.style.maxHeight = previewThumbnail.style.minWidth = previewThumbnail.style.minHeight = "24px";
-            previewThumbnail.addEventListener('click', () => {
-                show360Viewer(thumbnail.src);
-                showToast(LogLevels.LOG, "Opening thumbnail in 3D viewer");
-            });
-            thumbnailContainer.appendChild(previewThumbnail);
-        }
-
-        thumbnailContainer.appendChild(thumbnail);
-        sessionItem.appendChild(thumbnailContainer);
-
-        const name = document.createElement('p');
-        name.id = "SessionName";
-        name.innerHTML = `${sanatizeString(session.name)}, ${session.activeUsers}/${session.maxUsers}`;
-        sessionItem.appendChild(name);
-        
-        const users = document.createElement('p');
-        users.id = "SessionUsers";
-        const sessionUsers = session.sessionUsers;
-        var string = "";
-        for (let index = 0; index < sessionUsers.length; index++) {
-            const user = sessionUsers[index];
-            const isContact = client.data.contacts.some(contact => user.userID === contact.id);
-
-            if (isContact && user.isPresent == true) {
-                string += `<span style='color: #2ee860'>${sanatizeString(user.username)}</span>`;
-            } else if (isContact && user.isPresent == false) {
-                string += `<span style='color: #2fa84f'>${sanatizeString(user.username)}</span>`;
-            } else if (user.isPresent == false) {
-                string += `<span style='color: #b8b8b8'>${sanatizeString(user.username)}</span>`;
-            } else {
-                string += `${sanatizeString(user.username)}`;
-            }
-            
-            if (index != sessionUsers.length - 1) {
-                string += ", ";
-            }
-        }
-        users.innerHTML = `${string}`;
-        sessionItem.appendChild(users);
-
-        sessionsContainer.appendChild(sessionItem);
-    });
+    return string
 }
 
 function show360Viewer(thumbnail) {
@@ -289,35 +228,6 @@ function close360Viewer() {
     const viewer = document.getElementById("viewerContainer");
     viewer.style.visibility = "hidden";
     viewer.style.display = "none";
-}
-
-// Unused as of now
-async function updateSessionItem(session) {
-    const sessionItem = document.getElementById(session.sessionId);
-    sessionItem.querySelector("#SessionThumbnail").src = session.thumbnailUrl ?? "./resources/nothumbnail.png";
-    sessionItem.querySelector("#SessionName").innerHTML = `${sanatizeString(session.name)}, ${session.activeUsers}/${session.maxUsers}`;
-    
-    const sessionUsers = session.sessionUsers;
-    var string = "";
-    for (let index = 0; index < sessionUsers.length; index++) {
-        const element = sessionUsers[index];
-        const isContact = client.data.contacts.some(contact => element.userID === contact.id);
-        
-        if (isContact && element.isPresent == true) {
-            string += `<span style='color: #2ee860'>${element.username}</span>`;
-        } else if (isContact && element.isPresent == false) {
-            string += `<span style='color: #2fa84f'>${element.username}</span>`;
-        } else if (element.isPresent == false) {
-            string += `<span style='color: #b8b8b8'>${element.username}</span>`;
-        } else {
-            string += `${element.username}`;
-        }
-        
-        if (index != sessionUsers.length - 1) {
-            string += ", ";
-        }
-    }
-    sessionItem.querySelector("#SessionUsers").innerHTML = `${sanatizeString(string)}`;
 }
 
 function sanatizeString(string) {
