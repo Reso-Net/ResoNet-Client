@@ -57,10 +57,13 @@
                             <h1>Sessions</h1>   
                             <img id="sessionSettingsDropdown" src="./resources/stat_minus_1.svg" class="dropdownOff" onclick="toggleSettingsDropdown()" style="cursor: pointer; max-width: 32px;">
                         </div>
-                        <form id="sessionSettings" style="visibility: hidden; display: none;">
-                            <input type="checkbox" id="hideEmptySessions" value="true" checked="checked">: Hide empty sessions
-                            <input type="checkbox" id="hideNonContactSessions" value="false">: Show sessions with contacts
-                        </form>
+                        <li id="sessionSettings" style="visibility: hidden; display: none;">
+                            <input type="checkbox" id="hideEmptySessions" value="true" checked="checked">: Filter by populated sessions
+                            <input type="checkbox" id="hideNonHeadlessSesssions" value="false">: Filter by headless sessions
+                            <input type="checkbox" id="hideNonContactSessions" value="false">: Filter by contacts
+                            <input style="color: black; visibility: hidden; display: none;" type="text" id="filterSessionsWithName" value="">
+                            <input style="color: black; visibility: hidden; display: none;" type="text" id="filterSessionsWithUser" value="">
+                        </li>
                     </div>
                     <div id="sessions"></div>
                 </div>

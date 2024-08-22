@@ -1,6 +1,32 @@
-async function manualRefreshSessions() {
-    showToast(LogLevels.LOG, "Manually refreshing session entries");
+document.addEventListener('DOMContentLoaded', async () => {  
+    document.getElementById("hideEmptySessions").addEventListener('click', async () => {
+        await manualRefreshSessions();
+    });
 
+    document.getElementById("hideNonContactSessions").addEventListener('click', async () => {
+        await manualRefreshSessions();
+    });
+
+    document.getElementById("hideNonHeadlessSesssions").addEventListener('click', async () => {
+        await manualRefreshSessions();
+    });
+
+    document.getElementById("filterSessionsWithName").addEventListener('keypress', async(key) => {
+        if (key.code == "Enter") {
+            showToast(LogLevels.LOG, `Filtering sessions by name: ${document.getElementById("filterSessionsWithName").value}`);
+            await manualRefreshSessions();
+        }
+    });
+
+    document.getElementById("filterSessionsWithUser").addEventListener('keypress', async(key) => {
+        if (key.code == "Enter") {
+            showToast(LogLevels.LOG, `Filtering sessions by username: ${document.getElementById("filterSessionsWithUser").value}`);
+            await manualRefreshSessions();
+        }
+    });
+});
+
+async function manualRefreshSessions() {
     const sessionsContainer = document.getElementById('sessions');
     
     while (sessionsContainer.firstChild) { 
@@ -8,23 +34,45 @@ async function manualRefreshSessions() {
     }
 
     client.data.sessions.forEach(session => {
-        if (document.getElementById("hideEmptySessions").checked && session.activeUsers == 0) return;
         handleSessionUpdate(session);
     });
 }
 
 async function handleSessionUpdate(session) {
-    const sessionItem = document.getElementById(session.sessionId);
-    let hasContactInSession = false;
-
-    session.sessionUsers.some(user => {
-        if (checkContactStatus(user)) {
-            hasContactInSession = true;
-        }
-    });
-
     if (document.getElementById("hideEmptySessions").checked && session.activeUsers == 0) return;
-    if (document.getElementById("hideNonContactSessions").checked && !hasContactInSession) return;
+    if (document.getElementById("hideNonHeadlessSesssions").checked && !session.headlessHost == true) return;
+
+    //let userQuerey = document.getElementById("filterSessionsWithName").value;
+    
+    if (document.getElementById("hideNonContactSessions").checked) {
+        let foundSession = false;
+        
+        session.sessionUsers.some(user => {
+            if (checkContactStatus(user)) {
+                foundSession = true;
+            }
+        });
+        
+        if (!foundSession) return;
+    }
+    
+    let nameQuerey = document.getElementById("filterSessionsWithName").value.toLowerCase().trim();
+    if (nameQuerey.trim() != "" && !session.name.toLowerCase().trim().includes(nameQuerey)) { return; }
+
+    let userQuerey = document.getElementById("filterSessionsWithUser").value.toLowerCase().trim();
+    if (userQuerey != "") {
+        let foundUser = false;
+        
+        session.sessionUsers.some(user => {
+            if (user.username.toLowerCase().trim().includes(userQuerey)) {
+                foundUser = true;
+            }
+        });
+        
+        if (!foundUser) return;
+    }
+
+    const sessionItem = document.getElementById(session.sessionId);
 
     if (sessionItem == null) {
         addSessionItem(session);

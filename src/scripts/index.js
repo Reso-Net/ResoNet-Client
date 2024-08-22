@@ -55,14 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     await setupLoginScreen();
-
-    document.getElementById("hideEmptySessions").addEventListener('click', async () => {
-        await manualRefreshSessions();
-    });
-
-    document.getElementById("hideNonContactSessions").addEventListener('click', async () => {
-        await manualRefreshSessions();
-    });
 });
 
 async function tryLoadConfig() {
@@ -109,9 +101,15 @@ async function setupLoginScreen() {
                 const worldsTab = document.getElementById("worlds");
 
                 if (worldsTab.className.includes("active")) {
-                    handleSessionUpdate(session);
+                    if (document.getElementById("filterSessionsWithName").value == "" && document.getElementById("filterSessionsWithUser").value == "") 
+                        handleSessionUpdate(session);
                 }
             });    
+
+            client.on("messageRecieveEvent", async (message) => {
+                showToast(LogLevels.LOG, `${message.senderId}: ${message.content}`, 3000, "./resources/chat_bubble.svg");
+                console.log(message)
+            }); 
         }).catch((error) => {
             showLoginScreen();
             showToast(LogLevels.ERROR, `Failed logging in: ${error}`)
@@ -145,7 +143,8 @@ function hideLoginScreen() {
     content.style.display = "flex";
 }
 
-function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000) {
+function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000, customIcon = null) {
+    message = sanatizeString(message);
     const toastContainer = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -155,7 +154,9 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
 
     const messageContainer = document.createElement('div');
     if (message == null) messageContainer.textContent = "Undefined";
-    else messageContainer.textContent = message;
+    else messageContainer.innerHTML = message;
+    messageContainer.style.color = "#000"
+
 
     // Awful code please fix
     // Move this to css to be used later
@@ -184,6 +185,8 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
         toast.style.backgroundColor = "#FAFAFA";
         toast.style.borderColor = "#FFFFFF";
     }
+
+    if (customIcon != null) icon.src = customIcon;
 
     toast.appendChild(icon);
     toast.appendChild(messageContainer);
