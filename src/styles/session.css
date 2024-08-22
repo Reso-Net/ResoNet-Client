@@ -29,6 +29,16 @@
     left: 0px;
 }
 
+#sessionSettings.hidden {
+    visibility: hidden;
+    display: none;
+}
+
+#sessionSettings.visible {
+    visibility: visible;
+    display: block;
+}
+
 .session {
     background-color: #4F4557;
     color: #fff;

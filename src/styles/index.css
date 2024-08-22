@@ -55,3 +55,13 @@ body {
     fill: #fff;
     opacity: 100%;
 }
+
+.dropdownOff {
+    cursor: pointer;
+    transform: rotate(0deg);
+}
+
+.dropdownOn {
+    cursor: pointer;
+    transform: rotate(180deg);
+}

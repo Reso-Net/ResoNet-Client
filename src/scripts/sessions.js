@@ -1,4 +1,6 @@
 async function manualRefreshSessions() {
+    showToast(LogLevels.LOG, "Manually refreshing session entries");
+
     const sessionsContainer = document.getElementById('sessions');
     
     while (sessionsContainer.firstChild) { 
@@ -13,8 +15,16 @@ async function manualRefreshSessions() {
 
 async function handleSessionUpdate(session) {
     const sessionItem = document.getElementById(session.sessionId);
+    let hasContactInSession = false;
+
+    session.sessionUsers.some(user => {
+        if (checkContactStatus(user)) {
+            hasContactInSession = true;
+        }
+    });
 
     if (document.getElementById("hideEmptySessions").checked && session.activeUsers == 0) return;
+    if (document.getElementById("hideNonContactSessions").checked && !hasContactInSession) return;
 
     if (sessionItem == null) {
         addSessionItem(session);
@@ -75,7 +85,7 @@ async function addSessionItem(session) {
     var string = "";
     for (let index = 0; index < sessionUsers.length; index++) {
         const user = sessionUsers[index];
-        string += sanatizeString(user.username);
+        string += getStatusColour(user);
 
         if (index != sessionUsers.length - 1) string += ", ";
     }
@@ -97,9 +107,45 @@ async function updateSessionItem(session) {
     var string = "";
     for (let index = 0; index < sessionUsers.length; index++) {
         const user = sessionUsers[index];
-        string += sanatizeString(user.username);
+        string += getStatusColour(user);
 
         if (index != sessionUsers.length - 1) string += ", ";
     }
-    sessionItem.querySelector("#SessionUsers").innerHTML = `${sanatizeString(string)}`;
+    sessionItem.querySelector("#SessionUsers").innerHTML = `${string}`;
+}
+
+function getStatusColour(user) {
+    var string = "";
+
+    const isContact = checkContactStatus(user);
+    const username = sanatizeString(user.username);    
+
+    if (isContact && user.isPresent == true) {
+        string += `<span style='color: #2ee860'>${username}</span>`;
+    } else if (isContact && user.isPresent == false) {
+        string += `<span style='color: #2fa84f'>${username}</span>`;
+    } else if (user.isPresent == false) {
+        string += `<span style='color: #b8b8b8'>${username}</span>`;
+    } else {
+        string += `${username}`;
+    }
+
+    return string
+}
+
+function toggleSettingsDropdown() {
+    const dropdown = document.getElementById("sessionSettingsDropdown");
+    if (dropdown.className == "dropdownOff") { 
+        dropdown.className = "dropdownOn";
+        sessionSettings.style.visibility = "visible";
+        sessionSettings.style.display = "flex";
+    } else if (dropdown.className == "dropdownOn") {
+        dropdown.className = "dropdownOff";
+        sessionSettings.style.visibility = "hidden";
+        sessionSettings.style.display = "none";
+    }
+}
+
+function checkContactStatus(user) {
+    return client.data.contacts.some(contact => user.userID === contact.id && contact.isAccepted && contact.contactStatus == "Accepted")
 }

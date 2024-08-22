@@ -3,7 +3,6 @@ const fs = require('fs').promises;
 const path = require('path');
 
 let client;
-let contacts = {};
 let config; 
 
 const LogLevels = {
@@ -57,7 +56,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await setupLoginScreen();
 
-    document.getElementById("refreshSessions").addEventListener('click', async () => {
+    document.getElementById("hideEmptySessions").addEventListener('click', async () => {
+        await manualRefreshSessions();
+    });
+
+    document.getElementById("hideNonContactSessions").addEventListener('click', async () => {
         await manualRefreshSessions();
     });
 });
@@ -100,6 +103,8 @@ async function setupLoginScreen() {
             hideLoginScreen();
             showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
             
+            manualRefreshSessions();
+
             client.on("sessionUpdateEvent", async (session) => {
                 const worldsTab = document.getElementById("worlds");
 
@@ -197,29 +202,10 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
     }, duration);
 }
 
-// Broken
-async function getStatusColour(user) {
-    var string = "";
-
-    const isContact = client.data.contacts.some(contact => user.userID === contact.id);
-        
-    if (isContact && user.isPresent == true) {
-        string += `<span style='color: #2ee860'>${user.username}</span>`;
-    } else if (isContact && user.isPresent == false) {
-        string += `<span style='color: #2fa84f'>${user.username}</span>`;
-    } else if (user.isPresent == false) {
-        string += `<span style='color: #b8b8b8'>${user.username}</span>`;
-    } else {
-        string += `${user.username}`;
-    }
-
-    return string
-}
-
 function show360Viewer(thumbnail) {
     const viewer = document.getElementById("viewerContainer");
     viewer.style.visibility = "visible";
-    viewer.style.display = "flex";
+    viewer.style.display = "block";
     
     updateThumbnail(thumbnail);
 }
