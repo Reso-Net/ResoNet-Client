@@ -10,7 +10,7 @@
   margin: 0;
   padding: 0;
   flex: 1; /* Allows ul to grow and take available space */
-  background-color: #4F4557;
+  background-color: #2b2f35;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
@@ -34,12 +34,12 @@
 }
 
 #navbar li a.active {
-  background-color: #6D5D6E;
+  background-color: #4a4a4d;
   color: white;
 }
 
 #navbar li a.hidden {
-  background-color: #4F4557;
+  background-color: #2b2f35;
   color: white;
 }
 

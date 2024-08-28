@@ -1,5 +1,5 @@
 #loginContainer {
-    background-color: #4F4557;
+    background-color: #2b2f35;
     position: absolute;
     padding: 2rem;
     border-radius: 8px;
@@ -25,14 +25,14 @@
     box-sizing: border-box;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #ccc;
-    background-color: #6D5D6E;
+    background-color: #4a4a4d;
     border-radius: 4px;
 }
 
 #loginContainer button {
     width: 100%; 
     padding: 16px;
-    background-color: #4F4557;
+    background-color: #4a4a4d;
     border: none;
     color: white;
     font-size: 16px;
@@ -43,9 +43,9 @@
 }
 
 #loginContainer button:hover {
-    background-color: #6D5D6E;
+    background-color: #86888b;
 }
 
 #loginContainer button:disabled {
-    background-color: #4F4557;
+    background-color: #2b2f35;
 }

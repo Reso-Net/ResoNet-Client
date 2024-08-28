@@ -2,9 +2,6 @@ const ResoNetLib = require('resonet-lib');
 const fs = require('fs').promises;
 const path = require('path');
 
-let client;
-let config; 
-
 const LogLevels = {
     SUCCESS: "success",
     LOG: "log",
@@ -13,6 +10,8 @@ const LogLevels = {
     UNKNOWN: "unknown",
 }
 
+let client;
+let config;
 let pages;
 let tabs;
 
@@ -95,29 +94,20 @@ async function setupLoginScreen() {
             hideLoginScreen();
             showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
             
-            manualRefreshSessions();
-
             client.session.on("sessionUpdateEvent", async (session) => {
-                const worldsTab = document.getElementById("worlds");
-
-                if (worldsTab.className.includes("active")) {
-                    handleSessionUpdate(session);
-                }
+                handleSessionUpdate(session);
             });    
 
             client.session.on("sessionRemoveEvent", async (sessionId) => {
-                console.log("Received remove event for: ", sessionId);
-                const worldsTab = document.getElementById("worlds");
-
-                if (worldsTab.className.includes("active")) {
-                    removeSessionItem(sessionId);
-                }
+                removeSessionItem(sessionId);
             });
 
             client.message.on("messageRecieveEvent", async (message) => {
                 showToast(LogLevels.LOG, `${message.senderId}: ${message.content}`, 3000, "./resources/chat_bubble.svg");
                 console.log(message)
             }); 
+
+            manualRefreshSessions();
         }).catch((error) => {
             showLoginScreen();
             showToast(LogLevels.ERROR, `Failed logging in: ${error}`)
@@ -164,7 +154,6 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
     if (message == null) messageContainer.textContent = "Undefined";
     else messageContainer.innerHTML = message;
     messageContainer.style.color = "#000"
-
 
     // Awful code please fix
     // Move this to css to be used later

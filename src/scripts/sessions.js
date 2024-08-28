@@ -176,11 +176,11 @@ function getStatusColour(user) {
     const username = sanatizeString(user.username);    
 
     if (isContact && user.isPresent == true) {
-        string += `<span style='color: #2ee860'>${username}</span>`;
+        string += `<span style='color: #59eb5c'>${username}</span>`;
     } else if (isContact && user.isPresent == false) {
-        string += `<span style='color: #2fa84f'>${username}</span>`;
+        string += `<span style='color: #3f9e44'>${username}</span>`;
     } else if (user.isPresent == false) {
-        string += `<span style='color: #b8b8b8'>${username}</span>`;
+        string += `<span style='color: #86888b'>${username}</span>`;
     } else {
         string += `${username}`;
     }

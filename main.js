@@ -8,7 +8,9 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-        }
+        },
+        icon: path.join(__dirname, 'src', 'resources', 'logo.ico'), 
+        autoHideMenuBar: true,
     });
     
     mainWindow.loadFile(path.join(__dirname, 'src', 'index.html'));
