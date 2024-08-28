@@ -97,16 +97,24 @@ async function setupLoginScreen() {
             
             manualRefreshSessions();
 
-            client.on("sessionUpdateEvent", async (session) => {
+            client.session.on("sessionUpdateEvent", async (session) => {
                 const worldsTab = document.getElementById("worlds");
 
                 if (worldsTab.className.includes("active")) {
-                    if (document.getElementById("filterSessionsWithName").value == "" && document.getElementById("filterSessionsWithUser").value == "") 
-                        handleSessionUpdate(session);
+                    handleSessionUpdate(session);
                 }
             });    
 
-            client.on("messageRecieveEvent", async (message) => {
+            client.session.on("sessionRemoveEvent", async (sessionId) => {
+                console.log("Received remove event for: ", sessionId);
+                const worldsTab = document.getElementById("worlds");
+
+                if (worldsTab.className.includes("active")) {
+                    removeSessionItem(sessionId);
+                }
+            });
+
+            client.message.on("messageRecieveEvent", async (message) => {
                 showToast(LogLevels.LOG, `${message.senderId}: ${message.content}`, 3000, "./resources/chat_bubble.svg");
                 console.log(message)
             }); 

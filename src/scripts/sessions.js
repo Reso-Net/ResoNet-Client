@@ -33,7 +33,8 @@ async function manualRefreshSessions() {
         sessionsContainer.removeChild(sessionsContainer.firstChild); 
     }
 
-    client.data.sessions.forEach(session => {
+    const sessions = client.data.sessions;
+    sessions.forEach(session => {
         handleSessionUpdate(session);
     });
 }
@@ -79,6 +80,12 @@ async function handleSessionUpdate(session) {
     } else {
         updateSessionItem(session);
     }
+}
+
+async function removeSessionItem(sessionId) {
+    const sessionItem = document.getElementById(sessionId);
+    if (sessionItem != null) 
+        sessionItem.remove();
 }
 
 async function addSessionItem(session) {
