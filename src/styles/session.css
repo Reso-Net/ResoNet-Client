@@ -42,7 +42,6 @@
 .session {
     background-color: #2b2f35;
     color: #fff;
-    border-radius: 8px;
     border-style: none;
     width: calc(100vw / 6);
     padding: 16px;
@@ -50,11 +49,27 @@
     align-items: stretch;
 }
 
-.session p {
+#SessionUsers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
     margin: 0;
-    padding: 16px;
+    padding: 8px;
     background-color: #4a4a4d;
-    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#SessionUsers p {
+    margin: 0;
+}
+
+#SessionName {
+    margin: 0;
+    padding: 8px;
+    background-color: #4a4a4d;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -62,5 +77,4 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     height: auto;
-    border-radius: 8px;
 }

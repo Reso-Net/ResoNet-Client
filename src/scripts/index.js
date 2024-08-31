@@ -16,6 +16,10 @@ let pages;
 let tabs;
 
 document.addEventListener('DOMContentLoaded', async () => {  
+    document.addEventListener('click', function() {
+        hideContextMenu();
+    });
+
     pages = document.querySelectorAll('#navbar a');
     tabs = document.querySelectorAll('.tab');
     
@@ -47,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    switchTab("home");
+    switchTab("worlds");
 
     await tryLoadConfig().then(json => {
         config = json;
@@ -93,7 +97,7 @@ async function setupLoginScreen() {
         await client.start().then(() => {
             hideLoginScreen();
             showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
-            
+
             client.session.on("sessionUpdateEvent", async (session) => {
                 handleSessionUpdate(session);
             });    
@@ -106,8 +110,6 @@ async function setupLoginScreen() {
                 showToast(LogLevels.LOG, `${message.senderId}: ${message.content}`, 3000, "./resources/chat_bubble.svg");
                 console.log(message)
             }); 
-
-            manualRefreshSessions();
         }).catch((error) => {
             showLoginScreen();
             showToast(LogLevels.ERROR, `Failed logging in: ${error}`)
@@ -155,33 +157,34 @@ function showToast(logLevel = LogLevels.UNKNOWN, message = null, duration = 3000
     else messageContainer.innerHTML = message;
     messageContainer.style.color = "#000"
 
-    // Awful code please fix
-    // Move this to css to be used later
-    if (logLevel == LogLevels.SUCCESS) {
-        icon.src = "./resources/check_circle.svg";
-        toast.style.backgroundColor = "#DEF2D6";
-        toast.style.borderColor = "#586C50";
-    } else if (logLevel == LogLevels.LOG) {
-        icon.src = "./resources/info.svg";
-        toast.style.backgroundColor = "#CCE8F4";
-        toast.style.borderColor = "#4F81A4";
-    } else if (logLevel == LogLevels.WARNING) {
-        icon.src = "./resources/warning.svg";
-        toast.style.backgroundColor = "#F8F3D6";
-        toast.style.borderColor = "#8F723A";
-    } else if (logLevel == LogLevels.ERROR) {
-        icon.src = "./resources/error.svg";
-        toast.style.backgroundColor = "#EBC8C4";
-        toast.style.borderColor = "#B64242";
-    } else if (logLevel == LogLevels.UNKNOWN) {
-        icon.src = "./resources/help.svg";
-        toast.style.backgroundColor = "#FAFAFA";
-        toast.style.borderColor = "#FFFFFF";
-    } else {
-        icon.src = "./resources/help.svg";
-        toast.style.backgroundColor = "#FAFAFA";
-        toast.style.borderColor = "#FFFFFF";
-    }
+    switch (logLevel) {
+        case LogLevels.SUCCESS:
+            icon.src = "./resources/check_circle.svg";
+            toast.style.backgroundColor = "#DEF2D6";
+            toast.style.borderColor = "#586C50";
+            break;
+        case LogLevels.LOG:
+            icon.src = "./resources/info.svg";
+            toast.style.backgroundColor = "#CCE8F4";
+            toast.style.borderColor = "#4F81A4";
+            break;
+        case LogLevels.WARNING:
+            icon.src = "./resources/warning.svg";
+            toast.style.backgroundColor = "#F8F3D6";
+            toast.style.borderColor = "#8F723A";
+            break;
+        case LogLevels.ERROR:
+            icon.src = "./resources/error.svg";
+            toast.style.backgroundColor = "#EBC8C4";
+            toast.style.borderColor = "#B64242";
+            break;
+        case LogLevels.UNKNOWN:
+        default:
+            icon.src = "./resources/help.svg";
+            toast.style.backgroundColor = "#FAFAFA";
+            toast.style.borderColor = "#FFFFFF";
+            break;
+    }   
 
     if (customIcon != null) icon.src = customIcon;
 
@@ -218,4 +221,34 @@ function close360Viewer() {
 
 function sanatizeString(string) {
     return string.replace(/<.*?>/g, '').trim();
+}
+
+function showContextMenu(e, actionName, actions) {    
+    const menu = document.getElementById("contextMenu");
+    menu.style.display = "flex";
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+   
+    while (menu.firstChild) { 
+        menu.removeChild(menu.firstChild); 
+    }
+
+    const label = document.createElement("p");
+    label.textContent = actionName;
+    menu.appendChild(label);
+
+    actions.forEach(action => {
+        const button = document.createElement("button");
+        button.id = "contextMenuButton";
+        button.textContent = action.name;
+        button.onclick = () => {
+            action.action();
+        }
+        menu.appendChild(button);     
+    });
+}
+
+function hideContextMenu() {
+    const menu = document.getElementById("contextMenu");
+    menu.style.display = 'none';
 }
