@@ -96,20 +96,21 @@ async function setupLoginScreen() {
         client = new ResoNetLib(loginData);
         await client.start().then(() => {
             hideLoginScreen();
-            showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
-
-            client.session.on("sessionUpdateEvent", async (session) => {
+            manualRefreshSessions();
+            client.on("sessionUpdateEvent", async (session) => {
                 handleSessionUpdate(session);
             });    
-
-            client.session.on("sessionRemoveEvent", async (sessionId) => {
+            
+            client.on("sessionRemoveEvent", async (sessionId) => {
                 removeSessionItem(sessionId);
             });
-
-            client.message.on("messageRecieveEvent", async (message) => {
+            
+            client.on("messageRecieveEvent", async (message) => {
                 showToast(LogLevels.LOG, `${message.senderId}: ${message.content}`, 3000, "./resources/chat_bubble.svg");
                 console.log(message)
             }); 
+
+            showToast(LogLevels.SUCCESS, `Successfully logged into ${client.data.userId}`);
         }).catch((error) => {
             showLoginScreen();
             showToast(LogLevels.ERROR, `Failed logging in: ${error}`)

@@ -10,20 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("hideNonHeadlessSesssions").addEventListener('click', async () => {
         await manualRefreshSessions();
     });
-
-    // Unused for now as it's buggy to use
-    //document.getElementById("filterSessionsWithName").addEventListener('keypress', async(key) => {
-    //    if (key.code == "Enter") {
-    //        showToast(LogLevels.LOG, `Filtering sessions by name: ${document.getElementById("filterSessionsWithName").value}`);
-    //        await manualRefreshSessions();
-    //    }
-    //});
-    //document.getElementById("filterSessionsWithUser").addEventListener('keypress', async(key) => {
-    //    if (key.code == "Enter") {
-    //        showToast(LogLevels.LOG, `Filtering sessions by username: ${document.getElementById("filterSessionsWithUser").value}`);
-    //        await manualRefreshSessions();
-    //    }
-    //});
 });
 
 async function manualRefreshSessions() {
@@ -54,21 +40,6 @@ async function handleSessionUpdate(session) {
         
         if (!foundSession) return;
     }
-    
-    //let nameQuerey = document.getElementById("filterSessionsWithName").value.toLowerCase().trim();
-    //if (nameQuerey.trim() != "" && !session.name.toLowerCase().trim().includes(nameQuerey)) { return; }
-    //let userQuerey = document.getElementById("filterSessionsWithUser").value.toLowerCase().trim();
-    //if (userQuerey != "") {
-    //    let foundUser = false;
-    //    
-    //    session.sessionUsers.some(user => {
-    //        if (user.username.toLowerCase().trim().includes(userQuerey)) {
-    //            foundUser = true;
-    //        }
-    //    });
-    //    
-    //    if (!foundUser) return;
-    //}
 
     const sessionItem = document.getElementById(session.sessionId);
 
@@ -125,7 +96,7 @@ async function addSessionItem(session) {
             {name: "Copy session name", action: () => { navigator.clipboard.writeText(session.name); }},
             {name: "Copy session id", action:() => { navigator.clipboard.writeText(session.sessionId); }},
             {name: "Copy host id", action:() => { navigator.clipboard.writeText(session.hostUserId); }},
-            {name: "Copy host hostUsername", action:() => { navigator.clipboard.writeText(session.hostUserId); }},
+            {name: "Copy host username", action:() => { navigator.clipboard.writeText(session.hostUsername); }},
             //{name: "Copy compatibility hash", action:() => { navigator.clipboard.writeText(session.compatibilityHash); }},
             //{name: "Copy app version", action:() => { navigator.clipboard.writeText(session.appVersion); }},
         ]);

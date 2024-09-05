@@ -1,0 +1,29 @@
+// Filtering via session names and active users
+
+document.getElementById("filterSessionsWithName").addEventListener('keypress', async(key) => {
+    if (key.code == "Enter") {
+        showToast(LogLevels.LOG, `Filtering sessions by name: ${document.getElementById("filterSessionsWithName").value}`);
+        await manualRefreshSessions();
+    }
+});
+document.getElementById("filterSessionsWithUser").addEventListener('keypress', async(key) => {
+    if (key.code == "Enter") {
+        showToast(LogLevels.LOG, `Filtering sessions by username: ${document.getElementById("filterSessionsWithUser").value}`);
+        await manualRefreshSessions();
+    }
+});
+
+let nameQuerey = document.getElementById("filterSessionsWithName").value.toLowerCase().trim();
+if (nameQuerey.trim() != "" && !session.name.toLowerCase().trim().includes(nameQuerey)) { return; }
+let userQuerey = document.getElementById("filterSessionsWithUser").value.toLowerCase().trim();
+if (userQuerey != "") {
+    let foundUser = false;
+    
+    session.sessionUsers.some(user => {
+        if (user.username.toLowerCase().trim().includes(userQuerey)) {
+            foundUser = true;
+        }
+    });
+    
+    if (!foundUser) return;
+}
