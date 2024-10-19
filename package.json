@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "resonet-lib": "github:LeCloutPanda/ResoNet-Lib",
+    "resonet-lib": "github:Reso-Net/ResoNet-Lib",
     "three": "^0.167.1"
   }
 }

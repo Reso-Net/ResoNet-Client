@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    switchTab("worlds");
+    switchTab("contacts");
 
     await tryLoadConfig().then(json => {
         config = json;
