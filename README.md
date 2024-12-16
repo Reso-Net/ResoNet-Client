@@ -13,4 +13,14 @@ ResoNet-Client is Electron based desktop app that provides an easy way to intera
 	"rememberMe": true
 }
 ```
-*TOTP  is only needed if you use TOTP on the account*
+*TOTP is only needed if you use TOTP on the account*
+
+# Main things I am focusing on
+- [ ] Fix contacts and messages sections not scrolling/scaling correctly
+- [ ] Fix menu tabs at top not playing nicely with rest of application
+- [ ] Move message/contact handling code to it's own class
+- [ ] Clean up message/contact handling code
+- [ ] Clean css files up
+- [ ] Add user searching
+- [ ] Add user profile stuff
+- [ ] Basically finish the Contacts tab entirely
