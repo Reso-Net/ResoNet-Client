@@ -1,0 +1,97 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+    color: #fff;
+    user-select: none;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #18191c;
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px; 
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4a4a4d; 
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #86888b;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+#content {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.interactableButton {
+    cursor: pointer;
+    fill: #6D5D6E;
+    padding: 4px;
+    opacity: 50%;
+    transition: 250ms ease-in-out;
+}
+
+.interactableButton:hover {
+    cursor: pointer;
+    fill: #fff;
+    opacity: 100%;
+}
+
+.dropdownOff {
+    cursor: pointer;
+    transform: rotate(0deg);
+}
+
+.dropdownOn {
+    cursor: pointer;
+    transform: rotate(180deg);
+}
+
+#contextMenu {
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    background-color: #2b2f35;
+    border: 1px solid #ccc;
+    gap: 4px;
+    padding: 8px;
+    z-index: 1000;
+}
+
+#contextMenu p {
+    margin: 0;
+}
+
+#contextMenu button {
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    align-self: stretch;
+    border: none;
+    background-color: #4a4a4d;
+}
+
+#contextMenu button:hover {
+    background-color: #86888b;
+}
+
+#contextMenu button:disabled {
+    background-color: #2b2f35;
+}

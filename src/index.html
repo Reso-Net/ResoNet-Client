@@ -2,106 +2,45 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="styles/index.css">
-        <link rel="stylesheet" href="styles/viewer.css">
-        <link rel="stylesheet" href="styles/login.css">
-        <link rel="stylesheet" href="styles/navbar.css">
-        <link rel="stylesheet" href="styles/session.css">
-        <link rel="stylesheet" href="styles/toast.css">
-        <link rel="stylesheet" href="styles/tab.css">
-
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
         
         <title>ResoNet-Client</title>
         <link rel="icon" href="./resources/logo.ico">
+        <link rel="stylesheet" href="styles/index.css">
         <script src="./scripts/index.js"></script>
-        <script src="./scripts/sessions.js"></script>
     </head>
 
-    <body>
-        <div id="loginContainer" style="visibility: visible; display: flex;">
-            <h2>ResoNet</h2>
-            <form id="loginForm">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit" id="login">Login</button>
-            </form>
+    <body class="page">
+        <div class="sideBar">
+            <button class="pButton" name="home">
+                <img src="./resources/home.svg">
+            </button>
+            <button class="pButton" name="contacts">
+                <img src="./resources/contacts.svg">
+            </button>
+            <button class="pButton" name="worlds">
+                <img src="./resources/public.svg">
+            </button>
+            <button class="pButton" name="settings">
+                <img src="./resources/settings.svg">
+            </button>
         </div>
 
-        <div id="viewerContainer" style="visibility: hidden;">
-            <div class="thumbnailViewer" id="viewer">
-                <img src="./resources/close.svg" alt="Close 360 Viewer" class="interactableButton" onclick="close360Viewer()">
-            </div>    
-        </div>
-
-        <div id="contextMenu"></div>
-
-        <div id="toastContainer"></div>
-
-        <div id="content" style="visibility: hidden; display: none;">
-            <div id="navbar">
-                <ul>
-                    <li><a href="#" data-page="home" class="active"><img src="./resources/home.svg" class="interactableButton" alt="Home Icon"></a></li>
-                    <li><a href="#" data-page="contacts" class="hidden"><img src="./resources/contacts.svg" class="interactableButton" alt="Contacts Icon"></a></li>
-                    <li><a href="#" data-page="worlds" class="hidden"><img src="./resources/public.svg" class="interactableButton" alt="Worlds Icon"></a></li>
-                    <li><a href="#" data-page="inventory" class="hidden"><img src="resources/folder_open.svg" class="interactableButton" alt="Inventory Icon"></a></li>
-                    <li><a href="#" data-page="settings" class="hidden"><img src="./resources/settings.svg" class="interactableButton" alt="Settings Icon"></a></li>
-                </ul>
+        <div class="content">
+            <div class="panel" name="home">
+                <p>Home</p>
             </div>
-
-            <div id="tabs">
-                <div id="home" class="tab">Home</div>
-                <div id="contacts" class="tab">
-                    <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
-                        <div style="display: flex; width: calc(100% / 5); height: 100%;"> 
-                            <input id="contactSearch" style="height: 48px; background-color: yellowgreen;" type="text" placeholder="Search for user...">
-                            
-                            <div style="flex-grow: 1; background-color: aqua;">
-                                <div id="contactItem" style="display: flex; flex-direction: row; min-height: 64px; max-height: 64px; justify-content: space-between; align-items: center; background-color: red;">
-                                    <div style="min-width: 48px; min-height: 48px; max-width: 48px; max-height: 48px;">
-                                        <img src="./resources/3d_rotation.svg" >
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; flex-grow: 1; ">
-                                        <p>U-LeCloutPanda</p>
-                                        <p>In home world</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="background-color: green; display: flex; flex-grow: 1; height: 100%;;">
-                            <div style="background-color: blue; height: 100%;">
-
-                            </div>
-                            <div style="background-color: orange; height: 100%;">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="worlds" class="tab">
-                     <div style="display: flex; flex-direction: column; min-height: 128px; align-items: center; justify-content: center;">
-                        <div style="display: flex; flex-direction: row; gap: 8px; min-height: 64px; align-items: center; height: 64px;">
-                            <h1>Sessions</h1>   
-                            <img id="sessionSettingsDropdown" src="./resources/stat_minus_1.svg" class="dropdownOff" onclick="toggleSettingsDropdown()" style="cursor: pointer; max-width: 32px;">
-                        </div>
-                        <li id="sessionSettings" style="visibility: hidden; display: none;">
-                            <input type="checkbox" id="hideEmptySessions" value="true" checked="checked">: Filter by populated sessions
-                            <input type="checkbox" id="hideNonHeadlessSesssions" value="false">: Filter by headless sessions
-                            <input type="checkbox" id="hideNonContactSessions" value="false">: Filter by contacts
-                            <input style="color: black; visibility: hidden; display: none;" type="text" id="filterSessionsWithName" value="">
-                            <input style="color: black; visibility: hidden; display: none;" type="text" id="filterSessionsWithUser" value="">
-                        </li>
-                    </div>
-                    <div id="sessions"></div>
-                </div>
-                <div id="inventory" class="tab">Inventory</div>
-                <div id="settings" class="tab">Settings</div>
+            <div class="panel hidden" name="contacts">
+                <p>Contacts</p>
+            </div>
+            <div class="panel hidden" name="worlds">
+                <p>Worlds</p>
+            </div>
+            <div class="panel hidden" name="settings">
+                <p>Settings</p>
             </div>
         </div>
-
-        <script src="./scripts/360viewer.js"></script>
     </body>
 </html>

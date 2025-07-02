@@ -1,97 +1,77 @@
+/*
+    Raisin Black: #272932
+    Anti-Flash White: #E7ECEF
+    Bittersweet: #F05D5E
+    Caribbean Current: #0F7173
+    Buff: #D8A47F
+*/
+
 * {
     font-family: 'Roboto', sans-serif;
-    overflow: hidden;
-    color: #fff;
-    user-select: none;
+    color: #E7ECEF;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.page {
+    display: flex;
+    flex-direction: row;
 }
 
 body {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    background-color: #18191c;
-    margin: 0;
+    background-color: #272932;
 }
 
-::-webkit-scrollbar {
-    width: 16px;
-    height: 16px; 
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #4a4a4d; 
-    border: 6px solid transparent;
-    background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #86888b;
-    border: 6px solid transparent;
-    background-clip: content-box;
-}
-
-#content {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-}
-
-.interactableButton {
-    cursor: pointer;
-    fill: #6D5D6E;
+.sideBar {
     padding: 4px;
-    opacity: 50%;
-    transition: 250ms ease-in-out;
-}
-
-.interactableButton:hover {
-    cursor: pointer;
-    fill: #fff;
-    opacity: 100%;
-}
-
-.dropdownOff {
-    cursor: pointer;
-    transform: rotate(0deg);
-}
-
-.dropdownOn {
-    cursor: pointer;
-    transform: rotate(180deg);
-}
-
-#contextMenu {
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    position: absolute;
-    background-color: #2b2f35;
-    border: 1px solid #ccc;
     gap: 4px;
-    padding: 8px;
-    z-index: 1000;
+    padding-right: 2px;
 }
 
-#contextMenu p {
-    margin: 0;
+.sideBar button:last-child {
+    margin-top: auto;
 }
 
-#contextMenu button {
-    display: inline-block;
-    cursor: pointer;
-    text-decoration: none;
-    align-self: stretch;
-    border: none;
-    background-color: #4a4a4d;
+.pButton {
+    border-style: hidden;
+    padding: 4px;
+    background-color: #0F7173;
+    border-radius: 8px;
+    display: flex;
+    transition: 0.25s;
 }
 
-#contextMenu button:hover {
-    background-color: #86888b;
+.pButton:hover {
+    background-color: #189092;
 }
 
-#contextMenu button:disabled {
-    background-color: #2b2f35;
+.pButton > img {
+    min-width: 32px;
+}
+
+.content {
+    flex: 1;
+    padding: 4px;
+    padding-left: 2px;
+}
+
+.panel {
+    background-color: #0F7173;
+    border-radius: 8px;
+    padding: 4px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
