@@ -86,7 +86,7 @@ async function attemptLogin() {
 function sortContacts() {
     console.log("Sorting contacts...");
 
-    const status = ["Social", "Online", "Busy", "Away", "Headless", "Offline"]; 
+    const status = ["Sociable", "Online", "Busy", "Away", "Headless", "Offline"]; 
 
     const contactsList = document.getElementById('contactsList');
     const users = Array.from(contactsList.querySelectorAll('.userItem'));

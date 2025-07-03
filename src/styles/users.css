@@ -77,7 +77,7 @@
     aspect-ratio: 1 / 1;
 }
 
-.userItem[status="Social"] > img {
+.userItem[status="Sociable"] > img {
     border-color: #42F2F7;
 }
 
