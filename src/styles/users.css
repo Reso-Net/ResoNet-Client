@@ -77,23 +77,34 @@
     aspect-ratio: 1 / 1;
 }
 
-.userItem[status="social"] > img {
+.userItem[status="Social"] > img {
     border-color: #42F2F7;
 }
 
-.userItem[status="online"] > img {
+.userItem[status="Online"] > img {
     border-color: #31CB00;
 }
 
-.userItem[status="busy"] > img {
+.userItem[status="Busy"] > img {
     border-color: #E63B2E;
 }
 
-.userItem[status="away"] > img {
+.userItem[status="Away"] > img {
     border-color: #bbd000;
 }
-.userItem[status="offline"] > img {
+
+.userItem[status="Headless"] > img {
+    border-color: #8D6A9F;
+}
+
+.userItem[status="Offline"] > img {
     border-color: #272932;
+    filter: brightness(1.5);
+}
+
+.userItem[status="Null"] > img {
+    border-color: #272932;
+    filter: brightness(1.5);
 }
 
 #userInfo {

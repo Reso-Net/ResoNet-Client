@@ -10,6 +10,7 @@
     Lime Green: #31CB00
     Selective Yellow: #D00000
     Vermillion: #E63B2E
+    Pomp and Power: #8D6A9F
 */
 
 * {
@@ -17,7 +18,7 @@
     color: #E7ECEF;
 }
 
-html, body {
+html, body, .page {
     height: 100%;
     margin: 0;
 }
@@ -56,6 +57,13 @@ button {
 
 .shadow {
     box-shadow: 0px 0px 4px #333333;
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
 
 button:hover {

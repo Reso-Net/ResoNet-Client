@@ -11,7 +11,6 @@
         <link rel="stylesheet" href="styles/index.css">
         <link rel="stylesheet" href="styles/panels.css">
         <link rel="stylesheet" href="styles/users.css">
-        <script src="./scripts/client.js"></script>
         <script src="./scripts/index.js"></script>
 
         <template id="userItemTemplate">
@@ -23,53 +22,58 @@
             </button>
         </template>
     </head>
-
-    <body class="page">
-        <div class="sideBar">
-            <button class="pButton shadow" name="home">
-                <img src="./resources/home.svg">
-            </button>
-            <button class="pButton shadow" name="contacts">
-                <img src="./resources/contacts.svg">
-            </button>
-            <button class="pButton shadow" name="worlds">
-                <img src="./resources/public.svg">
-            </button>
-            <button class="pButton shadow" name="settings">
-                <img src="./resources/settings.svg">
-            </button>
-        </div>
-
-        <div class="panels">
-            <div class="panel hidden" name="home">
-                <div class="subPanel"></div>
+    
+    <body>
+        <div class="loader shadow">Loading...</div>
+        <div class="page hidden">
+            <div class="sideBar">
+                <button class="pButton shadow" name="home">
+                    <img src="./resources/home.svg">
+                </button>
+                <button class="pButton shadow" name="contacts">
+                    <img src="./resources/contacts.svg">
+                </button>
+                <button class="pButton shadow" name="worlds">
+                    <img src="./resources/public.svg">
+                </button>
+                <button class="pButton shadow" name="settings">
+                    <img src="./resources/settings.svg">
+                </button>
             </div>
-            <div class="panel hidden" name="contacts">
-                <div class="subPanel shadow" id="userSearch">
-                    <div>
-                        <input type="text" placeholder="Search User..." id="userSearchInput" class="shadow">
-                        <button type="submit" class="shadow">
-                            <img src="./resources/search.svg">
-                        </button>
+
+            <div class="panels">
+                <div class="panel hidden" name="home">
+                    <div class="subPanel"></div>
+                </div>
+                <div class="panel hidden" name="contacts">
+                    <div class="subPanel shadow" id="userSearch">
+                        <div>
+                            <input type="text" placeholder="Search User..." id="userSearchInput" class="shadow">
+                            <button type="submit" class="shadow">
+                                <img src="./resources/search.svg">
+                            </button>
+                        </div>
+
+                        <div id="contactsList" class="userList active"></div>
+                        <div id="userSearchList" class="userList hidden"></div>
                     </div>
+                    <div class="subPanel shadow" id="userProfile">
 
-                    <div id="contactsList" class="userList active"></div>
-                    <div id="userSearchList" class="userList hidden"></div>
-                </div>
-                <div class="subPanel shadow" id="userProfile">
+                    </div>
+                    <div class="subPanel shadow" id="userMessages">
 
+                    </div>
                 </div>
-                <div class="subPanel shadow" id="userMessages">
+                <div class="panel hidden" name="worlds">
+                    <div class="subPanel">
 
+                    </div>
                 </div>
-            </div>
-            <div class="panel hidden" name="worlds">
-                <div class="subPanel">
-
+                <div class="panel hidden" name="settings">
+                    <div class="subPanel">
+                        <p>Settings</p>
+                    </div>
                 </div>
-            </div>
-            <div class="panel hidden" name="settings">
-                <p>Settings</p>
             </div>
         </div>
     </body>
