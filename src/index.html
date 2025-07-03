@@ -9,34 +9,64 @@
         <title>ResoNet-Client</title>
         <link rel="icon" href="./resources/logo.ico">
         <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/panels.css">
+        <link rel="stylesheet" href="styles/users.css">
+        <script src="./scripts/client.js"></script>
         <script src="./scripts/index.js"></script>
+
+        <template id="userItemTemplate">
+            <button class="userItem shadow" >
+                <img class="shadow" id="userProfilePicture" src="./resources/contacts.svg">
+                <div>
+                    <p id="userInfo"></p>
+                </div>
+            </button>
+        </template>
     </head>
 
     <body class="page">
         <div class="sideBar">
-            <button class="pButton" name="home">
+            <button class="pButton shadow" name="home">
                 <img src="./resources/home.svg">
             </button>
-            <button class="pButton" name="contacts">
+            <button class="pButton shadow" name="contacts">
                 <img src="./resources/contacts.svg">
             </button>
-            <button class="pButton" name="worlds">
+            <button class="pButton shadow" name="worlds">
                 <img src="./resources/public.svg">
             </button>
-            <button class="pButton" name="settings">
+            <button class="pButton shadow" name="settings">
                 <img src="./resources/settings.svg">
             </button>
         </div>
 
-        <div class="content">
-            <div class="panel" name="home">
-                <p>Home</p>
+        <div class="panels">
+            <div class="panel hidden" name="home">
+                <div class="subPanel"></div>
             </div>
             <div class="panel hidden" name="contacts">
-                <p>Contacts</p>
+                <div class="subPanel shadow" id="userSearch">
+                    <div>
+                        <input type="text" placeholder="Search User..." id="userSearchInput" class="shadow">
+                        <button type="submit" class="shadow">
+                            <img src="./resources/search.svg">
+                        </button>
+                    </div>
+
+                    <div id="contactsList" class="userList active"></div>
+                    <div id="userSearchList" class="userList hidden"></div>
+                </div>
+                <div class="subPanel shadow" id="userProfile">
+
+                </div>
+                <div class="subPanel shadow" id="userMessages">
+
+                </div>
             </div>
             <div class="panel hidden" name="worlds">
-                <p>Worlds</p>
+                <div class="subPanel">
+
+                </div>
             </div>
             <div class="panel hidden" name="settings">
                 <p>Settings</p>

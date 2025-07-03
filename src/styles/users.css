@@ -1,0 +1,102 @@
+#userSearch {
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    max-width: 320px;
+}
+
+#userSearch > div:first-of-type {
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+#userSearch > div:first-of-type > button {
+    margin-left: auto;
+    background-color: #D8A47F;
+}
+
+#userSearch > div:first-of-type > input {
+    border-radius: 8px;
+    flex-grow: 1;
+    border-style: none;
+    background-color: #272932;
+}
+
+#userProfile {
+    flex-grow: 2;
+    min-width: 320px;
+    max-width: 320px;
+}
+
+#userMessages {
+    flex-grow: 4;
+}
+
+.userList {
+    margin: 8px;
+    margin-top: 2px;
+    margin-bottom: 3px;
+    display: flex;
+    border-radius: 8px;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.userList::-webkit-scrollbar {
+    display: none;
+}
+
+.userItem {
+    padding: 8px;
+    border-radius: 8px;
+    min-height: 80px;
+    display: flex;
+    gap: 8px;
+    background-color: #272932;
+}
+
+.userItem > div {
+    border-radius: 8px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.userItem > img {
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 4px;
+    width: 56px;
+    aspect-ratio: 1 / 1;
+}
+
+.userItem[status="social"] > img {
+    border-color: #42F2F7;
+}
+
+.userItem[status="online"] > img {
+    border-color: #31CB00;
+}
+
+.userItem[status="busy"] > img {
+    border-color: #E63B2E;
+}
+
+.userItem[status="away"] > img {
+    border-color: #bbd000;
+}
+.userItem[status="offline"] > img {
+    border-color: #272932;
+}
+
+#userInfo {
+    white-space: pre-wrap;
+    text-align: left;
+}
