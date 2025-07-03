@@ -52,7 +52,6 @@ button {
     background-color: #0F7173;
     border-radius: 8px;
     display: flex;
-    transition: 0.25s;
 }
 
 .shadow {
@@ -62,8 +61,9 @@ button {
 .hidden {
     display: none;
     visibility: hidden;
-    width: 0;
-    height: 0;
+    max-width: 0px;
+    max-height: 0px;
+    overflow: hidden;
 }
 
 button:hover {

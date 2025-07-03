@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     });
 
     const userSearchInput = document.getElementById("userSearchInput");
-    userSearchInput.addEventListener('input', (event) => {
-        console.log(userSearchInput.value);
-    })
+    userSearchInput.addEventListener('input', () => {
+        filterContacts(userSearchInput.value);
+    });
 
     swapPanel('contacts');
     await attemptLogin();
@@ -65,7 +65,7 @@ async function attemptLogin() {
     }
 
     client = new ResoNetLib(loginData);
-    await client.start().then(async () => {
+    await client.start().then(() => {
         client.on("sessionUpdateEvent", async (session) => { });    
         client.on("sessionRemoveEvent", async (sessionId) => { });
         client.on("messageRecieveEvent", async (message) => { });
@@ -74,9 +74,8 @@ async function attemptLogin() {
             sortContacts();
         });
 
-        // Initial setup
         for (const contact of client.data.contacts) {
-            await createContact(contact);
+            createContact(contact);
         }
     }).catch((error) => {
         console.error(error);
@@ -115,13 +114,30 @@ function sortContacts() {
     users.forEach(user => contactsList.appendChild(user));
 }
 
+async function filterContacts(query) {
+    const normalizedQuery = query.trim().toLowerCase();
+    const contactsList = document.getElementById('contactsList');
+    const users = Array.from(contactsList.querySelectorAll('.userItem'));
+
+    users.forEach(user => {
+        const username = (user.getAttribute('username') || user.textContent || '').toLowerCase();
+
+        if (username.includes(normalizedQuery)) {
+            user.classList.remove('hidden');
+        } else {
+            user.classList.add('hidden');
+        }
+    });
+}
 
 async function createContact(contact) {
     if (contact.isAccepted == true && contact.contactStatus == "Accepted") {
         var userItemFragment = userItemTemplate.content.cloneNode(true);
         var userItem = userItemFragment.querySelector('.userItem');
         userItem.id = `${contact.id}`;
-        userItem.setAttribute('status', "Offline");
+        userItem.setAttribute('status', 'Offline');
+        userItem.setAttribute('username', contact.contactUsername);
+        userItem.setAttribute('isContact', true);
 
         userItem.addEventListener('click', () => {
             selectUser(userItem.id);

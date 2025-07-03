@@ -56,7 +56,6 @@
     padding: 8px;
     border-radius: 8px;
     min-height: 80px;
-    display: flex;
     gap: 8px;
     background-color: #272932;
 }
