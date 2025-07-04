@@ -15,14 +15,14 @@
 
 #userSearch > div:first-of-type > button {
     margin-left: auto;
-    background-color: #D8A47F;
+    background-color: #ff7676;
 }
 
 #userSearch > div:first-of-type > input {
     border-radius: 8px;
     flex-grow: 1;
     border-style: none;
-    background-color: #272932;
+    background-color: #11151d;
 }
 
 #userProfile {
@@ -57,53 +57,55 @@
     border-radius: 8px;
     min-height: 80px;
     gap: 8px;
-    background-color: #272932;
 }
 
 .userItem > div {
     border-radius: 8px;
     flex-grow: 1;
+    padding: 8px;
+    background-color: #11151d;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
 }
 
 .userItem > img {
     border-radius: 8px;
     border-style: solid;
+    border-color: #11151d;
+    background-color: #11151d;
     border-width: 4px;
     width: 56px;
     aspect-ratio: 1 / 1;
 }
 
-.userItem[status="Sociable"] > img {
-    border-color: #42F2F7;
+.userItem[status="Sociable"] {
+    background-color: #61d1fa;
 }
 
-.userItem[status="Online"] > img {
-    border-color: #31CB00;
+.userItem[status="Online"] {
+    background-color: #59eb5c;
 }
 
-.userItem[status="Busy"] > img {
-    border-color: #E63B2E;
+.userItem[status="Away"] {
+    background-color: #f8f770;
 }
 
-.userItem[status="Away"] > img {
-    border-color: #bbd000;
+.userItem[status="Busy"]{
+    background-color: #ff7676;
 }
 
-.userItem[status="Headless"] > img {
-    border-color: #8D6A9F;
+.userItem[status="Headless"] {
+    background-color: #11151d;
 }
 
-.userItem[status="Offline"] > img {
-    border-color: #272932;
-    filter: brightness(1.5);
+.userItem[status="Offline"] {
+    background-color: #2b2f35;
 }
 
-.userItem[status="Null"] > img {
-    border-color: #272932;
-    filter: brightness(1.5);
+.userItem[status="Null"] {
+    background-color: #2b2f35;
 }
 
 #userInfo {
