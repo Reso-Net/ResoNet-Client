@@ -75,9 +75,10 @@ async function attemptLogin() {
             sortContacts();
         });
 
-        for (const contact of client.data.contacts) {
+        client.data.contacts.forEach(contact => {
             createContact(contact);
-        }
+        });
+
     }).catch((error) => {
         console.error(error);
     });
@@ -132,83 +133,44 @@ async function filterContacts(query) {
 }
 
 async function createContact(contact) {
-    if (contact.isAccepted == true && contact.contactStatus == "Accepted") {
-        var userItemFragment = userItemTemplate.content.cloneNode(true);
-        var userItem = userItemFragment.querySelector('.userItem');
-        userItem.id = `${contact.id}`;
-        userItem.setAttribute('status', 'Offline');
-        userItem.setAttribute('username', contact.contactUsername);
-        userItem.setAttribute('isContact', true);
+    var userItemFragment = userItemTemplate.content.cloneNode(true);
+    var userItem = userItemFragment.querySelector('.userItem');
+    userItem.id = `${contact.contactUserId}`;
+    userItem.setAttribute('status', 'Offline');
+    userItem.setAttribute('username', contact.contactUsername);
+    userItem.setAttribute('isContact', true);
 
-        userItem.addEventListener('click', () => {
-            selectUser(userItem.id);
-        });
+    userItem.addEventListener('click', () => {
+        selectUser(userItem.id);
+    });
 
-        const userInfo = userItem.querySelector('#userInfo');
-        userInfo.textContent = `${contact.contactUsername}` 
+    const userInfo = userItem.querySelector('#userInfo');
+    userInfo.textContent = `${contact.contactUsername}` 
 
-        const userProfilePicture = userItem.querySelector('#userProfilePicture');
-        var pfp = client.formatAssetUrl(contact.profile?.iconUrl) ?? "./resources/contact.svg";
-        userProfilePicture.src = pfp;
-        
-        document.getElementById('contactsList').appendChild(userItemFragment);
-        await client.requestUserStatus(contact.id);
-    }
+    const userProfilePicture = userItem.querySelector('#userProfilePicture');
+    var pfp = client.formatAssetUrl(contact.currentUser?.profile?.iconUrl) ?? "./resources/contact.svg";
+    userProfilePicture.src = pfp;
+    
+    document.getElementById('contactsList').appendChild(userItemFragment);
+    await client.signalRConnection.send("RequestStatus", contact.contactUserId, true);
 }
 
-async function updateContactStatus(status) {
+function updateContactStatus(status) {
     try {
-        console.log(status);
         var onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
 
+        console.log(status);
+        console.log(status.userId);
         const userItem = document.getElementById(status.userId);
         userItem.setAttribute('status', onlineStatus);
 
         const userInfo = userItem.querySelector('#userInfo');
 
-        var currentSession = status.sessions[status.currentSessionIndex];
-        var isHidden = currentSession.sessionHidden;
-        var isHost = currentSession.isHost
-        var hashSalt = status.hashSalt;
-
-        console.log(hashIDToToken(currentSession.sessionHash, hashSalt));
-        var sessionName;
-        switch (currentSession.accessLevel) {
-            case "Private":
-            case "LAN":
-                sessionName = `a ${currentSession.accessLevel} World`;
-                break;
-
-            case "Contacts":
-                sessionName = `a Contacts Only World`;
-                break;
-
-            case "ContactsPlus":
-                sessionName = `a Contacts Plus World`;
-                break;
-
-            case "RegisteredUsers":
-            case "Anyone":
-                // Actually set session name if can get
-                sessionName = `a Publically accesible world World`;
-                break;
-
-            default: 
-                sessionName = `an Unkown World`;
-        }
-
-        userInfo.textContent = `${userItem.getAttribute('username')}\n${onlineStatus} in ${sessionName}` 
+        //var currentSession = status.sessions[status.currentSessionIndex];
+        userInfo.textContent = `${userItem.getAttribute('username')}`; // \n${onlineStatus} in ${sessionName} 
     } catch(error) {
         console.error(error);
     }
-}
-
-function hashIDToToken(id, salt = '') {
-  const hash = crypto.createHash('sha256')
-                     .update(id + salt, 'utf8')
-                     .digest('hex')
-                     .toUpperCase();
-  return hash;
 }
 
 async function selectUser(userId) {
