@@ -1,7 +1,6 @@
 const ResoNetLib = require("resonet-lib");
 const fs = require("fs").promises;
 const path = require("path");
-const { ok } = require("assert");
 
 var config;
 var client;
@@ -59,7 +58,7 @@ async function attemptLogin() {
         client.on("sessionRemoveEvent", async (sessionId) => { });
         client.on("messageRecieveEvent", async (message) => { });
         client.on("receiveStatusUpdate", async (status) => {
-            updateContactStatus(status);
+            await updateContactStatus(status);
             sortContacts();
         });
 
@@ -139,19 +138,43 @@ async function createContact(contact) {
     await client.signalRConnection.send("RequestStatus", contact.contactUserId, true);
 }
 
-function updateContactStatus(status) {
-    try {
-        var onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
-        const userItem = document.getElementById(status.userId);
-        userItem.setAttribute("status", onlineStatus);
-
-        const userStatus = userItem.querySelector(".status");
-
-        var currentAccessLevel = status.sessions[status.currentSessionIndex].accessLevel;
-        userStatus.textContent = `${userItem.getAttribute("username")}\nIn a ${currentAccessLevel} world` 
-    } catch(error) {
-        console.error(error);
+async function updateContactStatus(status) {
+    var onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
+    const userItem = document.getElementById(status.userId);
+    userItem.setAttribute("status", onlineStatus);
+    
+    const userStatus = userItem.querySelector(".status");
+    var session = await getCurrentSession(status.userId);
+    var sessionName;
+    if (session.name != null) {
+        sessionName = session.name;
+    } else {
+        switch(session.accessLevel) {
+            case "Private":
+                sessionName = "a Private World";
+                break;
+            case "LAN":
+                sessionName = "a Lan World";
+                break;
+            case "Contacts":
+                sessionName = "a Contacts Only World";
+                break;
+            case "ContactsPlus":
+                sessionName = "a Contacts Plus World";
+                break;
+            case "RegisteredUsers":
+                sessionName = "a RegisteredUsers World";
+                break;
+            case "Anyone":
+                sessionName = "a Anyone World";
+                break;
+            default:
+                sessionName = "a Unknown Wolrd";
+                break;
+        }
     }
+
+    userStatus.textContent = `${userItem.getAttribute("username")}\nIn ${sessionName}`; 
 }
 
 async function selectUser(userId) {
@@ -196,6 +219,27 @@ async function processBadges(userBadges) {
     });
 }
 
+async function getCurrentSession(userId) {
+    var user = client.fetchContact(userId);
+    var hashSalt = user.currentStatus.hashSalt;
+    var userSessions = user.currentStatus.sessions;
+    var currentSessionIndex = user.currentStatus.currentSessionIndex;
+    var res = await fetch("https://api.resonite.com/sessions");
+    var json = await res.json();
+    for (let index = 0; index < json.length; index++) {
+        const session = json[index];
+        const sessionId = session.sessionId;
+        const sessionHash = await idHash(sessionId + hashSalt);
+        if (sessionHash == userSessions[currentSessionIndex].sessionHash) {
+            return session;
+        } else {
+            continue;
+        }
+    }  
+
+    return { "accessLevel": userSessions[currentSessionIndex].accessLevel };
+}
+
 function createBadge(badgeUrl) {
     const profileBadges = document.getElementById("badges");
     const newBadge = document.createElement("img");
@@ -220,4 +264,13 @@ async function blockAvatar() {
 
 async function blockMutual() {
     console.log("Not implemented yet");
+}
+
+async function idHash(id) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(id);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    return hashHex.replace(/-/g, "").toUpperCase();
 }
