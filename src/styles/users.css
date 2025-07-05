@@ -3,112 +3,173 @@
     flex-direction: column;
     min-width: 320px;
     max-width: 320px;
+    gap: var(--gap);
+    border-radius: var(--border-radius);
 }
 
-#userSearch > div:first-of-type {
-    border-radius: 8px;
+#userSearch > div:first-child {
+    border-radius: var(--border-radius);
     padding: 8px;
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: var(--gap);
+    flex-grow: 0;
 }
 
-#userSearch > div:first-of-type > button {
-    margin-left: auto;
-    background-color: #ff7676;
-}
-
-#userSearch > div:first-of-type > input {
-    border-radius: 8px;
+#userSearch > div:first-child > input {
+    border-radius: var(--border-radius);
     flex-grow: 1;
     border-style: none;
-    background-color: #11151d;
+    background-color: var(--offline);
 }
 
 #userProfile {
-    flex-grow: 2;
-    min-width: 320px;
-    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 416px;
+    max-width: 416px;
+    gap: var(--gap);
+}
+
+#userProfile > .subPanel {
+    padding: var(--padding);
+}
+
+#userProfile > .subPanel > div > img {
+    width: 256px;
+}
+
+#profile {
+    flex-grow: 1;
+}
+
+#profile > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap); 
+}
+
+#actions {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    flex-grow: 0;
+}
+
+#actions > div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--gap);
+}
+
+#badges {
+    border-radius: var(--border-radius);
+    border-style: solid;
+    border-color: var(--offline);
+    background-color: var(--offline);
+    display: flex;
+    padding: var(--padding);
+    gap: 4px;
+    align-items: center;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    flex-grow: 1;
+}
+
+#badges > img{
+    flex-grow: 1;
+}
+
+#userProfile > .subPanel:nth-of-type(2) > button,
+#userProfile > .subPanel:nth-of-type(2) > div > button {
+    flex-grow: 1;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
 
 #userMessages {
     flex-grow: 4;
 }
 
-.userList {
-    margin: 8px;
-    margin-top: 2px;
-    margin-bottom: 3px;
+#contactsList {
     display: flex;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     flex-direction: column;
-    gap: 10px;
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    gap: var(--gap);
+    padding: var(--padding);
 }
 
-.userList::-webkit-scrollbar {
+#contactsList::-webkit-scrollbar {
     display: none;
 }
 
 .userItem {
     padding: 8px;
-    border-radius: 8px;
-    min-height: 80px;
+    border-radius: var(--border-radius);
     gap: 8px;
+    min-height: 80px;
+    max-height: 80px;
 }
 
 .userItem > div {
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     flex-grow: 1;
     padding: 8px;
-    background-color: #11151d;
+    background-color: var(--offline);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
 }
 
-.userItem > img {
-    border-radius: 8px;
+.profilePicture {
+    border-radius: var(--border-radius);
     border-style: solid;
-    border-color: #11151d;
-    background-color: #11151d;
+    border-color: var(--offline);
+    background-color: var(--grey);
     border-width: 4px;
     width: 56px;
+    min-width: 56px;
     aspect-ratio: 1 / 1;
 }
 
 .userItem[status="Sociable"] {
-    background-color: #61d1fa;
+    background-color: var(--socialable);
 }
 
 .userItem[status="Online"] {
-    background-color: #59eb5c;
-}
-
-.userItem[status="Away"] {
-    background-color: #f8f770;
+    background-color: var(--online);
 }
 
 .userItem[status="Busy"]{
-    background-color: #ff7676;
+    background-color: var(--busy);
+}
+
+.userItem[status="Away"] {
+    background-color: var(--away);
 }
 
 .userItem[status="Headless"] {
-    background-color: #11151d;
+    background-color: var(--headless);
+    
 }
 
 .userItem[status="Offline"] {
-    background-color: #2b2f35;
+    background-color: var(--offline);
 }
 
 .userItem[status="Null"] {
-    background-color: #2b2f35;
+    background-color: var(--offline);
 }
 
-#userInfo {
+.status {
     white-space: pre-wrap;
     text-align: left;
 }

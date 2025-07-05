@@ -1,28 +1,47 @@
+:root {
+    --primary-color: #3498db;
+    --padding: 8px;
+    --gap: 8px;
+    --border-radius: 8px;
+    --darkGrey: #2b2f35;
+    --grey: #2b2f35;
+    --socialable: #61d1fa;
+    --online: #59eb5c;
+    --busy: #ff7676;
+    --away: #f8f770;
+    --headless: #BA64F2;
+    --offline: #171a1d;
+    --color: #E7ECEF;
+}
+
 * {
     font-family: 'Roboto', sans-serif;
-    color: #E7ECEF;
+    color: var(--color);
 }
 
 html, body, .page {
     height: 100%;
+    width: 100%;
     margin: 0;
 }
 
 .page {
     display: flex;
     flex-direction: row;
+    gap: var(--gap);
 }
 
 body {
-    background-color: #11151d;
+    background-color: var(--offline);
 }
 
 .sideBar {
-    padding: 6px;
+    background-color: var(--grey);
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-right: 4px;
+    padding: var(--padding);
+    border-radius: var(--border-radius);
 }
 
 .sideBar button:last-child {
@@ -31,16 +50,13 @@ body {
 
 button {
     border-style: hidden;
-    padding: 8px;
+    padding: var(--padding);
     min-width: 32px;
     min-height: 32px;
-    background-color: #284c5d;
-    border-radius: 8px;
+    background-color: var(--grey);
+    border-radius: var(--border-radius);
     display: flex;
-}
-
-.shadow {
-    box-shadow: 0px 0px 4px #333333;
+    background-color: var(--primary-color);
 }
 
 .hidden {
@@ -49,6 +65,7 @@ button {
     max-width: 0px;
     max-height: 0px;
     overflow: hidden;
+    position: absolute;
 }
 
 button:hover {

@@ -14,29 +14,29 @@
         <script src="./scripts/index.js"></script>
 
         <template id="userItemTemplate">
-            <button class="userItem shadow" >
-                <img class="shadow" id="userProfilePicture" src="./resources/contacts.svg">
-                <div class="shadow">
-                    <p id="userInfo"></p>
+            <button class="userItem" onclick="selectUser(this.id)">
+                <img class="profilePicture" src="./resources/contacts.svg">
+                <div>
+                    <p class="status"></p>
                 </div>
             </button>
         </template>
     </head>
     
     <body>
-        <div class="loader shadow">Loading...</div>
+        <div class="loader">Loading...</div>
         <div class="page hidden">
             <div class="sideBar">
-                <button class="pButton shadow" name="home">
+                <button class="pButton" name="home" onclick="swapPanel(this.name)">
                     <img src="./resources/home.svg">
                 </button>
-                <button class="pButton shadow" name="contacts">
+                <button class="pButton" name="contacts" onclick="swapPanel(this.name)">
                     <img src="./resources/contacts.svg">
                 </button>
-                <button class="pButton shadow" name="worlds">
+                <button class="pButton" name="worlds" onclick="swapPanel(this.name)">
                     <img src="./resources/public.svg">
                 </button>
-                <button class="pButton shadow" name="settings">
+                <button class="pButton" name="settings" onclick="swapPanel(this.name)">
                     <img src="./resources/settings.svg">
                 </button>
             </div>
@@ -46,21 +46,51 @@
                     <div class="subPanel"></div>
                 </div>
                 <div class="panel hidden" name="contacts">
-                    <div class="subPanel shadow" id="userSearch">
-                        <div>
-                            <input type="text" placeholder="Search User..." id="userSearchInput" class="shadow">
-                            <button type="submit" id="userSearchConfirm"class="shadow">
+                    <div id="userSearch">
+                        <div class="subPanel">
+                            <input type="text" placeholder="Search User..." id="userSearchInput" oninput="filterContacts(this.value)">
+                            <button type="submit" onclick="searchUsers()">
                                 <img src="./resources/search.svg">
                             </button>
                         </div>
 
-                        <div id="contactsList" class="userList active"></div>
-                        <div id="userSearchList" class="userList hidden"></div>
+                        <div id="contactsList" class="subPanel"></div>
                     </div>
-                    <div class="subPanel shadow" id="userProfile">
+                    <div id="userProfile">
+                        <div class="subPanel" id="profile">
+                            <div>
+                                <img class="profilePicture">
+                                <div id="badges">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                    <img class="profileBadge" src="./resources/folder_open.svg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subPanel" id="actions">
+                            <button class="pButton" onclick="addRemoveContact()">Add/Remove Contact</button>
+                            <div>
+                                <button class="pButton" onclick="blockContact()">Unblock</button>
+                                <button class="pButton" onclick="blockAvatar()">Block Avatar</button>
+                                <button class="pButton" onclick="blockMutual()">Mutual Block</button>
+                            </div>
 
+                        </div>
                     </div>
-                    <div class="subPanel shadow" id="userMessages">
+                    <div class="subPanel" id="userMessages">
 
                     </div>
                 </div>
