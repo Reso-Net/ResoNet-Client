@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="styles/index.css">
         <link rel="stylesheet" href="styles/panels.css">
         <link rel="stylesheet" href="styles/users.css">
+        <link rel="stylesheet" href="styles/profile.css">
         <script src="./scripts/index.js"></script>
 
         <template id="userItemTemplate">
@@ -58,27 +59,11 @@
                     </div>
                     <div id="userProfile">
                         <div class="subPanel" id="profile">
-                            <div>
+                            <div id="profileInfo">
                                 <img class="profilePicture">
-                                <div id="badges">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                    <img class="profileBadge" src="./resources/folder_open.svg">
-                                </div>
+                                <p>User Info</p>
                             </div>
+                            <div id="badges"></div>
                         </div>
                         <div class="subPanel" id="actions">
                             <button class="pButton" onclick="addRemoveContact()">Add/Remove Contact</button>

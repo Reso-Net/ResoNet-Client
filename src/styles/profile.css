@@ -1,0 +1,93 @@
+#userProfile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 416px;
+    max-width: 416px;
+    gap: var(--gap);
+}
+
+#userProfile > .subPanel {
+    padding: var(--padding);
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+#profilePicture {
+    min-width: 128px;
+    min-height: 128px;
+}
+
+#profile {
+    flex-grow: 1;
+}
+
+#profileInfo {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+    align-items: center;
+}
+
+#profileInfo > p{
+    border-radius: var(--border-radius);
+    border-style: solid;
+    border-color: var(--offline);
+    background-color: var(--offline);
+    padding: var(--padding);
+    flex-grow: 1;
+    white-space: pre-wrap;
+}
+
+#profileInfo .profilePicture {
+    min-width: 96px;
+}
+
+#actions {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    flex-grow: 0;
+}
+
+#actions > div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--gap);
+}
+
+#badges {
+    border-radius: var(--border-radius);
+    border-style: solid;
+    border-color: var(--offline);
+    background-color: var(--offline);
+    display: flex;
+    padding: var(--padding);
+    gap: 4px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+#badges img {
+    flex: 1 1 calc((100% - 8 * 4px) / 9); /* 9 items per row, subtract total gaps */
+    max-width: calc((100% - 8 * 4px) / 9);
+    height: auto;               /* keep aspect ratio */
+    object-fit: contain;        /* scale image inside box */
+    aspect-ratio: 1 / 1;        /* force square container if you want square badges */
+}
+
+.profileBadge {
+    flex-grow: 1;
+    max-width: 32px;
+}
+
+#userProfile > .subPanel:nth-of-type(2) > button,
+#userProfile > .subPanel:nth-of-type(2) > div > button {
+    flex-grow: 1;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}

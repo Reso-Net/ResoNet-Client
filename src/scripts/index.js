@@ -1,6 +1,7 @@
-const ResoNetLib = require('resonet-lib');
-const fs = require('fs').promises;
-const path = require('path');
+const ResoNetLib = require("resonet-lib");
+const fs = require("fs").promises;
+const path = require("path");
+const { ok } = require("assert");
 
 var config;
 var client;
@@ -11,33 +12,33 @@ var userItemTemplate;
 var selectedContact;
 
 document.addEventListener("DOMContentLoaded", async (event) => {
-    panels = document.querySelectorAll('.panel');
-    userItemTemplate = document.getElementById('userItemTemplate');
+    panels = document.querySelectorAll(".panel");
+    userItemTemplate = document.getElementById("userItemTemplate");
 
-    swapPanel('contacts');
+    swapPanel("contacts");
     await attemptLogin();
-    selectUser('U-LeCloutPanda');
-    document.querySelector('.loader').classList.add('hidden');
-    document.querySelector('.page').classList.remove('hidden');
+    selectUser("U-LeCloutPanda");
+    document.querySelector(".loader").classList.add("hidden");
+    document.querySelector(".page").classList.remove("hidden");
 
 });
 
 function swapPanel(panelName) {
     panels.forEach(panel => {
-        panel.classList.add('hidden');
-        panel.classList.remove('active');
-        if (panel.getAttribute('name') === panelName) {
-            panel.classList.remove('hidden');
-            panel.classList.add('active');
+        panel.classList.add("hidden");
+        panel.classList.remove("active");
+        if (panel.getAttribute("name") === panelName) {
+            panel.classList.remove("hidden");
+            panel.classList.add("active");
         }
     });
 }
 
 async function tryLoadConfig() {
-    const configFilePath = path.join(__dirname, 'config.json');
+    const configFilePath = path.join(__dirname, "config.json");
     console.log("Looking for config in directory", configFilePath);
 
-    const data = await fs.readFile(configFilePath, 'utf8');
+    const data = await fs.readFile(configFilePath, "utf8");
     const json = JSON.parse(data);
     return json;
 }
@@ -76,12 +77,12 @@ function sortContacts() {
 
     const status = ["Sociable", "Online", "Busy", "Away", "Headless", "Offline"]; 
 
-    const contactsList = document.getElementById('contactsList');
-    const users = Array.from(contactsList.querySelectorAll('.userItem'));
+    const contactsList = document.getElementById("contactsList");
+    const users = Array.from(contactsList.querySelectorAll(".userItem"));
 
     users.sort((a, b) => {
-        const statusA = a.getAttribute('status') || '';
-        const statusB = b.getAttribute('status') || '';
+        const statusA = a.getAttribute("status") || "";
+        const statusB = b.getAttribute("status") || "";
 
         const indexA = status.indexOf(statusA);
         const indexB = status.indexOf(statusB);
@@ -93,48 +94,48 @@ function sortContacts() {
             return safeIndexA - safeIndexB;
         }
 
-        const nameA = (a.getAttribute('username') || a.textContent || '').toLowerCase();
-        const nameB = (b.getAttribute('username') || b.textContent || '').toLowerCase();
+        const nameA = (a.getAttribute("username") || a.textContent || "").toLowerCase();
+        const nameB = (b.getAttribute("username") || b.textContent || "").toLowerCase();
 
         return nameA.localeCompare(nameB);
     });
 
-    contactsList.innerHTML = '';
+    contactsList.innerHTML = "";
     users.forEach(user => contactsList.appendChild(user));
 }
 
 async function filterContacts(query) {
     const normalizedQuery = query.trim().toLowerCase();
-    const contactsList = document.getElementById('contactsList');
-    const users = Array.from(contactsList.querySelectorAll('.userItem'));
+    const contactsList = document.getElementById("contactsList");
+    const users = Array.from(contactsList.querySelectorAll(".userItem"));
 
     users.forEach(user => {
-        const username = (user.getAttribute('username') || user.textContent || '').toLowerCase();
+        const username = (user.getAttribute("username") || user.textContent || "").toLowerCase();
 
         if (username.includes(normalizedQuery)) {
-            user.classList.remove('hidden');
+            user.classList.remove("hidden");
         } else {
-            user.classList.add('hidden');
+            user.classList.add("hidden");
         }
     });
 }
 
 async function createContact(contact) {
     var userItemFragment = userItemTemplate.content.cloneNode(true);
-    var userItem = userItemFragment.querySelector('.userItem');
+    var userItem = userItemFragment.querySelector(".userItem");
     userItem.id = `${contact.contactUserId}`;
-    userItem.setAttribute('status', 'Offline');
-    userItem.setAttribute('username', contact.contactUsername);
-    userItem.setAttribute('isContact', true);
+    userItem.setAttribute("status", "Offline");
+    userItem.setAttribute("username", contact.contactUsername);
+    userItem.setAttribute("isContact", true);
     
-    const userProfilePicture = userItem.querySelector('.profilePicture');
+    const userProfilePicture = userItem.querySelector(".profilePicture");
     var pfp = client.formatAssetUrl(contact.currentUser?.profile?.iconUrl) ?? "./resources/contact.svg";
     userProfilePicture.src = pfp;
     
-    const userStatus = userItem.querySelector('.status');
+    const userStatus = userItem.querySelector(".status");
     userStatus.textContent = `${contact.contactUsername}` 
 
-    document.getElementById('contactsList').appendChild(userItemFragment);
+    document.getElementById("contactsList").appendChild(userItemFragment);
     await client.signalRConnection.send("RequestStatus", contact.contactUserId, true);
 }
 
@@ -142,12 +143,12 @@ function updateContactStatus(status) {
     try {
         var onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
         const userItem = document.getElementById(status.userId);
-        userItem.setAttribute('status', onlineStatus);
+        userItem.setAttribute("status", onlineStatus);
 
-        const userStatus = userItem.querySelector('.status');
+        const userStatus = userItem.querySelector(".status");
 
         var currentAccessLevel = status.sessions[status.currentSessionIndex].accessLevel;
-        userStatus.textContent = `${userItem.getAttribute('username')}\nIn a ${currentAccessLevel} world` 
+        userStatus.textContent = `${userItem.getAttribute("username")}\nIn a ${currentAccessLevel} world` 
     } catch(error) {
         console.error(error);
     }
@@ -156,13 +157,53 @@ function updateContactStatus(status) {
 async function selectUser(userId) {
     selectedContact = await client.fetchContact(userId);
 
-    const userProfile = document.querySelector('#userProfile');
-    const profilePicture = userProfile.querySelector('.profilePicture');
+    const userProfile = document.querySelector("#userProfile");
+    const profilePicture = userProfile.querySelector(".profilePicture");
     var pfp = client.formatAssetUrl(selectedContact.currentUser?.profile?.iconUrl) ?? "./resources/contact.svg";
     profilePicture.src = pfp;
 
-    if (userId == client.data.userId) userProfile.querySelector('#actions').classList.add("hidden");
-    else userProfile.querySelector('#actions').classList.remove("hidden");
+    const profileInfo = userProfile.querySelector("p");
+    var string = `${selectedContact.currentUser.username}(${selectedContact.currentUser.id})\n${selectedContact.currentUser.registrationDate}`;
+    profileInfo.textContent = string;
+
+    if (userId == client.data.userId) userProfile.querySelector("#actions").classList.add("hidden");
+    else userProfile.querySelector("#actions").classList.remove("hidden");
+
+    processBadges(selectedContact.currentUser?.tags);
+}
+
+async function processBadges(userBadges) {
+    if (client.data.badges == null) return;
+
+    const profileBadges = document.getElementById("badges");
+    while (profileBadges.hasChildNodes()) {
+        profileBadges.removeChild(profileBadges.lastChild);
+    }
+
+    if (userBadges == null) document.getElementById("badges").classList.add("hidden");
+    else document.getElementById("badges").classList.remove("hidden");
+
+    userBadges.forEach(badge => {
+        if (badge.startsWith("custom 3D badge")) return;
+        if (badge.startsWith("custom badge")) {
+            badge = badge.split(":")[1];
+            createBadge(badge);
+        } else {
+            badge = client.data.badges[badge];
+            if (badge == null) return; 
+            createBadge(badge);
+        }
+    });
+}
+
+function createBadge(badgeUrl) {
+    const profileBadges = document.getElementById("badges");
+    const newBadge = document.createElement("img");
+    newBadge.classList.add("profileBadge");
+    const formattedBadgeUrl = client.formatAssetUrl(badgeUrl);
+    console.log(formattedBadgeUrl);
+    newBadge.src = formattedBadgeUrl;
+    profileBadges.appendChild(newBadge);
 }
 
 async function addRemoveContact() {

@@ -9,7 +9,7 @@
 
 #userSearch > div:first-child {
     border-radius: var(--border-radius);
-    padding: 8px;
+    padding: var(--padding);
     display: flex;
     flex-direction: row;
     gap: var(--gap);
@@ -21,74 +21,6 @@
     flex-grow: 1;
     border-style: none;
     background-color: var(--offline);
-}
-
-#userProfile {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-width: 416px;
-    max-width: 416px;
-    gap: var(--gap);
-}
-
-#userProfile > .subPanel {
-    padding: var(--padding);
-}
-
-#userProfile > .subPanel > div > img {
-    width: 256px;
-}
-
-#profile {
-    flex-grow: 1;
-}
-
-#profile > div {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--gap); 
-}
-
-#actions {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-    flex-grow: 0;
-}
-
-#actions > div{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: var(--gap);
-}
-
-#badges {
-    border-radius: var(--border-radius);
-    border-style: solid;
-    border-color: var(--offline);
-    background-color: var(--offline);
-    display: flex;
-    padding: var(--padding);
-    gap: 4px;
-    align-items: center;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    flex-grow: 1;
-}
-
-#badges > img{
-    flex-grow: 1;
-}
-
-#userProfile > .subPanel:nth-of-type(2) > button,
-#userProfile > .subPanel:nth-of-type(2) > div > button {
-    flex-grow: 1;
-    justify-content: center;
-    display: flex;
-    align-items: center;
 }
 
 #userMessages {
