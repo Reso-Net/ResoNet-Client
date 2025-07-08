@@ -31,10 +31,10 @@
 }
 
 #profileInfo > p{
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
     border-style: solid;
-    border-color: var(--offline);
-    background-color: var(--offline);
+    border-color: var(--tertiaryColor);
+    background-color: var(--tertiaryColor);
     padding: var(--padding);
     flex-grow: 1;
     white-space: pre-wrap;
@@ -60,10 +60,10 @@
 }
 
 #badges {
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
     border-style: solid;
-    border-color: var(--offline);
-    background-color: var(--offline);
+    border-color: var(--tertiaryColor);
+    background-color: var(--tertiaryColor);
     display: flex;
     padding: var(--padding);
     gap: 4px;
@@ -80,10 +80,10 @@
 }
 
 #userWorlds {
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
     border-style: solid;
-    border-color: var(--offline);
-    background-color: var(--offline);
+    border-color: var(--tertiaryColor);
+    background-color: var(--tertiaryColor);
     display: flex;
     padding: var(--padding);
     gap: var(--gap);
@@ -96,7 +96,7 @@
 }
 
 .userWorldItem > div {
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
     flex-grow: 1;
     padding: var(--padding);
     display: flex;
@@ -105,7 +105,7 @@
     align-items: flex-start;
     font-stretch: condensed;
     justify-content: center;
-    background-color: var(--grey);
+    background-color: var(--secondaryColor);
 }
 .profileBadge {
     flex-grow: 1;

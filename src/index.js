@@ -1,5 +1,6 @@
 const ResoNetLib = require("resonet-lib");
-const fs = require("fs").promises;
+const fs = require("fs");
+const os = require('os');
 const path = require("path");
 
 var config;
@@ -16,60 +17,142 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     userItemTemplate = document.getElementById("userItemTemplate");
     userWorldItemTemplate = document.getElementById("userWorldItemTemplate");
 
-    swapPanel("contacts");
-    await attemptLogin();
-    selectUser("U-LeCloutPanda");
-    document.querySelector(".loader").classList.add("hidden");
-    document.querySelector(".page").classList.remove("hidden");
-
+    showLoginScreen();
 });
 
 function swapPanel(panelName) {
     panels.forEach(panel => {
         panel.classList.add("hidden");
-        panel.classList.remove("active");
         if (panel.getAttribute("name") === panelName) {
             panel.classList.remove("hidden");
-            panel.classList.add("active");
         }
     });
 }
 
-async function tryLoadConfig() {
-    const configFilePath = path.join(__dirname, "config.json");
-    console.log("Looking for config in directory", configFilePath);
+function getUserDataPath(appName = 'ResoNet') {
+  const platform = os.platform();
 
-    const data = await fs.readFile(configFilePath, "utf8");
-    const json = JSON.parse(data);
-    return json;
+  if (platform === 'win32') {
+    return path.join(process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'), appName);
+  }
+
+  if (platform === 'darwin') {
+    return path.join(os.homedir(), 'Library', 'Application Support', appName);
+  }
+
+  return path.join(os.homedir(), '.config', appName);
+}
+
+function loadConfig(defaults = {}) {
+    const configDir = getUserDataPath();
+    const configPath = path.join(configDir, 'config.json');
+
+    console.log(configPath);
+    if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+    }
+
+    let config = { ...defaults };
+
+    if (fs.existsSync(configPath)) {
+        try {
+            const raw = fs.readFileSync(configPath, 'utf-8');
+            const parsed = JSON.parse(raw);
+            config = { ...defaults, ...parsed };
+        } catch (err) {
+            console.warn('Warning: Failed to parse config file. Using defaults.', err);
+        }
+    } else {
+        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    }
+
+    // Provide a save function
+    config.save = () => {
+        const toSave = { ...config };
+        delete toSave.save;
+        fs.writeFileSync(configPath, JSON.stringify(toSave, null, 2));
+    };
+
+    return config;
+}
+
+async function showLoginScreen() {
+    const defaultConfig = {
+        "user": {
+            "username": "",
+            "password": "",
+            "totp": "",
+            "rememberMe": false,
+            "autoLogin": false
+        },
+        "app": {
+            "overrideColors": false,
+        },
+        "colorOverrides": {
+            "color": "#efece7",
+            "primaryColor": "#3498db",
+            "secondaryColor": "#2b2f35",
+            "tertiaryColor": "#171a1d",
+            "darkGrey": "#171a1d",
+            "socialable": "#61d1fa",
+            "online": "#59eb5c",
+            "busy": "#ff7676",
+            "away": "#f8f770",
+            "headless": "#BA64F2",
+            "offline": "#171a1d"
+        }
+    }
+    config = loadConfig(defaultConfig);
+
+    if (config.user.rememberMe == true) {
+        document.getElementById("username").value = config.user.username;
+        document.getElementById("password").value = config.user.password;
+    }
+
+    if (config.user.autoLogin == true) {
+        await attemptLogin();
+    }
 }
 
 async function attemptLogin() {
-    config = await tryLoadConfig();
+    console.log("Attemping to login");
+    document.getElementById("loginButton").disabled = true;
+    document.getElementById("loginButton").style.fontStyle = "italic";
+    document.getElementById("loginButton").style.backgroundColor = "var(--primaryColor)";
+    document.getElementById("loginButton").textContent = "Logging in...";
+    config.user.username = document.getElementById("username").value;
+    config.user.password = document.getElementById("password").value;
+
     if (config == null) return;
 
-    const loginData = {
-        "username": `${config.username}`,
-        "password": `${config.password}`,
-        "totp": ""
+    var clientConfig = {
+        "username": config.user.username,
+        "password": config.user.password,
+        "totp": config.user.totp
     }
-
-    client = new ResoNetLib(loginData);
+    client = new ResoNetLib(clientConfig);
     await client.start().then(() => {
-        client.on("sessionUpdateEvent", async (session) => { });    
-        client.on("sessionRemoveEvent", async (sessionId) => { });
-        client.on("messageRecieveEvent", async (message) => { });
+        config.save();
+
+        document.getElementById("loginPanel").classList.add("hidden");
+        document.getElementById("loginButton").style.fontStyle = "normal";
+        document.querySelector(".page").classList.remove("hidden");
+
         client.on("receiveStatusUpdate", async (status) => {
             await updateContactStatus(status);
             sortContacts();
         });
-
+        
         client.data.contacts.forEach(contact => {
             createContact(contact);
         });
 
-    }).catch((error) => {
-        console.error(error);
+        selectUser(client.data.userId);
+    }).catch(error => {
+        document.getElementById("loginButton").style.backgroundColor = "var(--busy)";
+        document.getElementById("loginButton").disabled = false;
+        document.getElementById("loginButton").textContent = `${error}`;
+        document.getElementById("loginButton").style.fontStyle = "normal";
     });
 }
 

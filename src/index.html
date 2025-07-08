@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="styles/panels.css">
         <link rel="stylesheet" href="styles/users.css">
         <link rel="stylesheet" href="styles/profile.css">
-        <script src="./scripts/index.js"></script>
+        <script src="./index.js"></script>
 
         <template id="userItemTemplate">
             <button class="userItem" onclick="selectUser(this.id)">
@@ -35,7 +35,19 @@
     </head>
     
     <body>
-        <div class="loader">Loading...</div>
+        <div id="loginPanel"> 
+            <div class="loginPanel">
+                <div class="loginBanner">
+                    <h2>Login</h2>
+                    <img src="./resources/logo.ico">
+                </div>
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+
+                <button id="loginButton" onclick="attemptLogin()">Login</button>
+            </div>
+        </div>
+
         <div class="page hidden">
             <div class="sideBar">
                 <button class="pButton" name="home" onclick="swapPanel(this.name)">
@@ -53,7 +65,7 @@
             </div>
 
             <div class="panels">
-                <div class="panel hidden" name="home">
+                <div class="panel" name="home">
                     <div class="subPanel"></div>
                 </div>
                 <div class="panel hidden" name="contacts">

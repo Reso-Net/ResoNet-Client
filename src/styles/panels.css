@@ -12,9 +12,9 @@
 }
 
 .subPanel {
-    background-color: var(--grey);
+    background-color: var(--secondaryColor);
     flex-grow: 1;
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
     padding: var(--padding);
 }
 
@@ -23,8 +23,4 @@
     visibility: hidden;
     width: 0;
     height: 0;
-}
-
-.panel.active {
-    visibility: visible;
 }

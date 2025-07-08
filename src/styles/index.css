@@ -1,17 +1,18 @@
 :root {
-    --primary-color: #3498db;
+    --color: #efece7;
+    --primaryColor: #3498db;
+    --secondaryColor: #2b2f35;
+    --tertiaryColor: #171a1d;
     --padding: 8px;
     --gap: 8px;
-    --border-radius: 8px;
-    --darkGrey: #2b2f35;
-    --grey: #2b2f35;
+    --borderRadius: 8px;
+    --darkGrey: #171a1d;
     --socialable: #61d1fa;
     --online: #59eb5c;
     --busy: #ff7676;
     --away: #f8f770;
     --headless: #BA64F2;
     --offline: #171a1d;
-    --color: #E7ECEF;
 }
 
 * {
@@ -32,16 +33,16 @@ html, body, .page {
 }
 
 body {
-    background-color: var(--offline);
+    background-color: var(--tertiaryColor);
 }
 
 .sideBar {
-    background-color: var(--grey);
+    background-color: var(--secondaryColor);
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: var(--padding);
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
 }
 
 .sideBar button:last-child {
@@ -53,10 +54,18 @@ button {
     padding: var(--padding);
     min-width: 32px;
     min-height: 32px;
-    background-color: var(--grey);
-    border-radius: var(--border-radius);
+    border-radius: var(--borderRadius);
     display: flex;
-    background-color: var(--primary-color);
+    background-color: var(--primaryColor);
+    transition: 0.125s linear;
+}
+
+button:hover {
+    filter: brightness(1.25);
+}
+
+button:disabled {
+    filter: brightness(0.75);
 }
 
 .hidden {
@@ -68,10 +77,42 @@ button {
     position: absolute;
 }
 
-button:hover {
-    filter: brightness(1.25);
-}
-
 .pButton > img {
     min-width: 32px;
+}
+
+.loginBanner {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap);
+}
+
+.loginPanel {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    width: 300px;
+    padding: var(--padding);
+    border-radius: var(--borderRadius);
+    background-color: var(--secondaryColor); 
+    display: flex;
+    gap: var(--gap);
+    flex-direction: column;
+}
+
+#loginPanel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--tertiaryColor);
+}
+
+input { 
+    border-radius: var(--borderRadius);
+    flex-grow: 1;
+    border-style: none;
+    min-height: 32px;
+    background-color: var(--tertiaryColor);
+    padding: calc(var(--padding) / 2);
 }
