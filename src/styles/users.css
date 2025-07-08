@@ -20,7 +20,7 @@
     flex-grow: 4;
 }
 
-#contactsList {
+#userList {
     display: flex;
     border-radius: var(--borderRadius);
     flex-direction: column;
@@ -31,7 +31,7 @@
     padding: var(--padding);
 }
 
-#contactsList::-webkit-scrollbar {
+#userList::-webkit-scrollbar {
     display: none;
 }
 

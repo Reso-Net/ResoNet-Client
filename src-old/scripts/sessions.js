@@ -143,7 +143,7 @@ async function updateSessionItem(session) {
     
     for (let index = 0; index < sessionUsers.length; index++) {
         const sessionUser = sessionUsers[index];
-        var userElement = sessionItem.querySelector(`#${sessionUser.userID}`); 
+        let userElement = sessionItem.querySelector(`#${sessionUser.userID}`); 
 
         if (userElement == null) {
             users.appendChild(createUserElement(sessionUser));
@@ -176,7 +176,7 @@ function createUserElement(sessionUser) {
 }
 
 function getStatusColour(user) {
-    var string = "";
+    let string = "";
 
     const isContact = checkContactStatus(user);
     const username = sanatizeString(user.username);    
