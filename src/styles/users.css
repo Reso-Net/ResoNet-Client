@@ -53,7 +53,7 @@
 .userItem > div {
     border-radius: var(--border-radius);
     flex-grow: 1;
-    padding: 8px;
+    padding: var(--padding);
     background-color: var(--offline);
     display: flex;
     flex-direction: column;

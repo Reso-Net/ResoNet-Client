@@ -7,12 +7,14 @@ var client;
 
 var panels;
 var userItemTemplate;
+var userWorldItemTemplate;
 
 var selectedContact;
 
 document.addEventListener("DOMContentLoaded", async (event) => {
     panels = document.querySelectorAll(".panel");
     userItemTemplate = document.getElementById("userItemTemplate");
+    userWorldItemTemplate = document.getElementById("userWorldItemTemplate");
 
     swapPanel("contacts");
     await attemptLogin();
@@ -135,7 +137,7 @@ async function createContact(contact) {
     userStatus.textContent = `${contact.contactUsername}` 
 
     document.getElementById("contactsList").appendChild(userItemFragment);
-    await client.signalRConnection.send("RequestStatus", contact.contactUserId, true);
+    await client.requestUserUpdate(contact.contactUserId);
 }
 
 async function updateContactStatus(status) {
@@ -144,10 +146,10 @@ async function updateContactStatus(status) {
     userItem.setAttribute("status", onlineStatus);
     
     const userStatus = userItem.querySelector(".status");
-    var session = await getCurrentSession(status.userId);
+    var session = await client.fetchContactSession(status.userId);
     var sessionName;
     if (session.name != null) {
-        sessionName = session.name;
+        sessionName = client.stripTags(session.name);
     } else {
         switch(session.accessLevel) {
             case "Private":
@@ -169,7 +171,8 @@ async function updateContactStatus(status) {
                 sessionName = "a Anyone World";
                 break;
             default:
-                sessionName = "a Unknown Wolrd";
+            case "Unkown":
+                sessionName = "a Unknown World";
                 break;
         }
     }
@@ -193,9 +196,10 @@ async function selectUser(userId) {
     else userProfile.querySelector("#actions").classList.remove("hidden");
 
     processBadges(selectedContact.currentUser?.tags);
+    processSessions(selectedContact.currentSessions);
 }
 
-async function processBadges(userBadges) {
+function processBadges(userBadges) {
     if (client.data.badges == null) return;
 
     const profileBadges = document.getElementById("badges");
@@ -203,10 +207,14 @@ async function processBadges(userBadges) {
         profileBadges.removeChild(profileBadges.lastChild);
     }
 
-    if (userBadges == null) document.getElementById("badges").classList.add("hidden");
+    if (userBadges == null) {
+        document.getElementById("badges").classList.add("hidden");
+        return;
+    }
     else document.getElementById("badges").classList.remove("hidden");
 
-    userBadges.forEach(badge => {
+    for (let index = 0; index < userBadges.length; index++) {
+        var badge = userBadges[index];
         if (badge.startsWith("custom 3D badge")) return;
         if (badge.startsWith("custom badge")) {
             badge = badge.split(":")[1];
@@ -216,28 +224,35 @@ async function processBadges(userBadges) {
             if (badge == null) return; 
             createBadge(badge);
         }
-    });
+    }
 }
 
-async function getCurrentSession(userId) {
-    var user = client.fetchContact(userId);
-    var hashSalt = user.currentStatus.hashSalt;
-    var userSessions = user.currentStatus.sessions;
-    var currentSessionIndex = user.currentStatus.currentSessionIndex;
-    var res = await fetch("https://api.resonite.com/sessions");
-    var json = await res.json();
-    for (let index = 0; index < json.length; index++) {
-        const session = json[index];
-        const sessionId = session.sessionId;
-        const sessionHash = await idHash(sessionId + hashSalt);
-        if (sessionHash == userSessions[currentSessionIndex].sessionHash) {
-            return session;
-        } else {
-            continue;
-        }
-    }  
+function processSessions(sessions) {
+    const userWorlds = document.getElementById("userWorlds");
+    while (userWorlds.hasChildNodes()) {
+        userWorlds.removeChild(userWorlds.lastChild);
+    }
 
-    return { "accessLevel": userSessions[currentSessionIndex].accessLevel };
+    if (sessions == null || sessions.length == 0) { 
+        document.getElementById("userWorlds").classList.add("hidden");
+        return;
+    }
+    else document.getElementById("userWorlds").classList.remove("hidden");
+
+    for (let index = 0; index < sessions.length; index++) {
+        const session = sessions[index];
+        var userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
+        var userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
+
+        userWorldItem.setAttribute('name', client.stripTags(session.name));
+        userWorldItem.setAttribute('sessionId', session.sessionId);
+        userWorldItem.querySelector('img').src = session.thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelectorAll('p')[0].textContent = client.stripTags(session.name);
+        userWorldItem.querySelectorAll('p')[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
+        userWorldItem.querySelectorAll('p')[1].style.opacity = "50%";
+        
+        userWorlds.appendChild(userWorldItem);
+    }
 }
 
 function createBadge(badgeUrl) {
@@ -245,7 +260,6 @@ function createBadge(badgeUrl) {
     const newBadge = document.createElement("img");
     newBadge.classList.add("profileBadge");
     const formattedBadgeUrl = client.formatAssetUrl(badgeUrl);
-    console.log(formattedBadgeUrl);
     newBadge.src = formattedBadgeUrl;
     profileBadges.appendChild(newBadge);
 }
@@ -264,13 +278,4 @@ async function blockAvatar() {
 
 async function blockMutual() {
     console.log("Not implemented yet");
-}
-
-async function idHash(id) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(id);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-    return hashHex.replace(/-/g, "").toUpperCase();
 }

@@ -79,6 +79,34 @@
     aspect-ratio: 1 / 1;        /* force square container if you want square badges */
 }
 
+#userWorlds {
+    border-radius: var(--border-radius);
+    border-style: solid;
+    border-color: var(--offline);
+    background-color: var(--offline);
+    display: flex;
+    padding: var(--padding);
+    gap: var(--gap);
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
+.userWorldItem {
+    gap: var(--gap);
+}
+
+.userWorldItem > div {
+    border-radius: var(--border-radius);
+    flex-grow: 1;
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    align-items: flex-start;
+    font-stretch: condensed;
+    justify-content: center;
+    background-color: var(--grey);
+}
 .profileBadge {
     flex-grow: 1;
     max-width: 32px;

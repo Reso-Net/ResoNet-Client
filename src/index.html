@@ -22,6 +22,16 @@
                 </div>
             </button>
         </template>
+
+        <template id="userWorldItemTemplate">
+            <button class="userWorldItem" onclick="console.log('Previewing World: ', this.name)">
+                <img class="profilePicture">
+                <div>
+                    <p></p>
+                    <p></p>
+                </div>
+            </button>
+        </template>
     </head>
     
     <body>
@@ -64,6 +74,9 @@
                                 <p>User Info</p>
                             </div>
                             <div class="hidden" id="badges"></div>
+                            <div class="hidden" id="userWorlds">
+                                <p>Insert session Item</p>
+                            </div>
                         </div>
                         <div class="subPanel" id="actions">
                             <button class="pButton" onclick="addRemoveContact()">Add/Remove Contact</button>
