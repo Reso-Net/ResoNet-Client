@@ -6,13 +6,13 @@
     --padding: 8px;
     --gap: 8px;
     --borderRadius: 8px;
-    --darkGrey: #171a1d;
     --socialable: #61d1fa;
     --online: #59eb5c;
     --busy: #ff7676;
     --away: #f8f770;
     --headless: #BA64F2;
     --offline: #171a1d;
+    --lerpTime: 0.125s;
 }
 
 * {
@@ -57,7 +57,7 @@ button {
     border-radius: var(--borderRadius);
     display: flex;
     background-color: var(--primaryColor);
-    transition: 0.125s linear;
+    transition: var(--lerpTime) linear;
 }
 
 button:hover {
@@ -115,4 +115,44 @@ input {
     min-height: 32px;
     background-color: var(--tertiaryColor);
     padding: calc(var(--padding) / 2);
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+}
+
+input[type="checkbox"] {
+    flex: 0 0 auto;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    background-color: var(--tertiaryColor); /* Unchecked background */
+    border-radius: var(--borderRadius);
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+}
+
+.loginPanel > div:nth-of-type(2) {
+    display: flex;
+    gap: var(--gap);
+    align-items: center;
+}
+
+.loginPanel > div:nth-of-type(2) > label {
+    padding: var(--padding);
+    background-color: var(--tertiaryColor);
+    border-radius: var(--borderRadius);
+    flex-grow: 1;
+}
+
+#rememberMe {
+    background-color: var(--tertiaryColor); /* Unchecked background */
+    border-radius: var(--borderRadius);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    position: relative;
+    transition: var(--lerpTime) linear;
+}
+
+#rememberMe:checked {
+    background-color: var(--primaryColor); /* Checked background */
 }

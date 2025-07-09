@@ -12,6 +12,7 @@ let panels;
 let userItemTemplate;
 let userWorldItemTemplate;
 let userSearchInput;
+let colorSettingItemTemplate;
 
 let selectedUser;
 
@@ -26,13 +27,13 @@ const defaultConfig = {
         "rememberMe": false,
         "autoLogin": false
     },
-    "colorOverrides": {
-        "override": true,
+    "appColors": {
         "color": "#efece7",
-        "primaryColor": "#ffffff",
+        "primaryColor": "#3498db",
         "secondaryColor": "#2b2f35",
-        "tertiaryColor": "#171a1d",
-        "darkGrey": "#171a1d",
+        "tertiaryColor": "#171a1d"
+    },
+    "resoniteColors": {
         "socialable": "#61d1fa",
         "online": "#59eb5c",
         "busy": "#ff7676",
@@ -43,7 +44,7 @@ const defaultConfig = {
 }
 
 document.addEventListener("DOMContentLoaded", async (event) => {    
-    await assignVariables();
+    assignVariables();
     await loadAndUseConfig();
 });
 
@@ -63,6 +64,7 @@ function assignVariables() {
     loginButon = document.getElementById("loginButton");
     userList = document.getElementById("userList");    
     userSearchInput = document.getElementById("userSearchInput");
+    colorSettingItemTemplate = document.getElementById("colorSettingItemTemplate");
     
     // User search stuff
     userSearchInput.addEventListener("keydown", () => {
@@ -76,30 +78,117 @@ async function loadAndUseConfig() {
     if (config.user.rememberMe == true) {
         document.getElementById("username").value = config.user.username;
         document.getElementById("password").value = config.user.password;
+        document.getElementById("rememberMe").checked = config.user.rememberMe;
     }
+
+    applyColorOverrides();
+    generateSettingsMenu();
 
     if (config.user.autoLogin == true) {
         await attemptLogin();
-    }
-
-    if (config.colorOverrides.override == true) {
-        applyColorOverrides()
     }
 }
 
 function applyColorOverrides() {
     const root = document.documentElement;
-    root.style.setProperty('--color', config.colorOverrides.color); 
-    root.style.setProperty('--primaryColor', config.colorOverrides.primaryColor);
-    root.style.setProperty('--secondaryColor', config.colorOverrides.secondaryColor);
-    root.style.setProperty('--tertiaryColor', config.colorOverrides.tertiaryColor);
-    root.style.setProperty('--darkGrey', config.colorOverrides.darkGrey);
-    root.style.setProperty('--socialable', config.colorOverrides.socialable);
-    root.style.setProperty('--online', config.colorOverrides.online);
-    root.style.setProperty('--busy', config.colorOverrides.busy);
-    root.style.setProperty('--away', config.colorOverrides.away);
-    root.style.setProperty('--headless', config.colorOverrides.headless);
-    root.style.setProperty('--offline', config.colorOverrides.offline);
+    root.style.setProperty('--color', config.appColors.color); 
+    root.style.setProperty('--primaryColor', config.appColors.primaryColor);
+    root.style.setProperty('--secondaryColor', config.appColors.secondaryColor);
+    root.style.setProperty('--tertiaryColor', config.appColors.tertiaryColor);
+
+    root.style.setProperty('--socialable', config.resoniteColors.socialable);
+    root.style.setProperty('--online', config.resoniteColors.online);
+    root.style.setProperty('--busy', config.resoniteColors.busy);
+    root.style.setProperty('--away', config.resoniteColors.away);
+    root.style.setProperty('--headless', config.resoniteColors.headless);
+    root.style.setProperty('--offline', config.resoniteColors.offline);
+}
+
+function saveConfig() {
+    config.save();
+}
+
+function resetConfig() {
+    config.appColors.color = defaultConfig.appColors.color;
+    config.appColors.primaryColor = defaultConfig.appColors.primaryColor;
+    config.appColors.secondaryColor = defaultConfig.appColors.secondaryColor;
+    config.appColors.tertiaryColor = defaultConfig.appColors.tertiaryColor;
+
+    config.resoniteColors.socialable = defaultConfig.resoniteColors.socialable;
+    config.resoniteColors.online = defaultConfig.resoniteColors.online;
+    config.resoniteColors.busy = defaultConfig.resoniteColors.busy;
+    config.resoniteColors.away = defaultConfig.resoniteColors.away;
+    config.resoniteColors.headless = defaultConfig.resoniteColors.headless;
+    config.resoniteColors.offline = defaultConfig.resoniteColors.offline;
+
+    applyColorOverrides();
+}
+
+
+function changeColor(key, value) {
+    document.documentElement.style.setProperty(key, value); 
+    config.appColors.color = document.documentElement.style.getPropertyValue('--color'); 
+    config.appColors.primaryColor = document.documentElement.style.getPropertyValue('--primaryColor');
+    config.appColors.secondaryColor = document.documentElement.style.getPropertyValue('--secondaryColor');
+    config.appColors.tertiaryColor = document.documentElement.style.getPropertyValue('--tertiaryColor');
+    config.resoniteColors.socialable = document.documentElement.style.getPropertyValue('--socialable');
+    config.resoniteColors.online = document.documentElement.style.getPropertyValue('--online');
+    config.resoniteColors.busy = document.documentElement.style.getPropertyValue('--busy');
+    config.resoniteColors.away = document.documentElement.style.getPropertyValue('--away');
+    config.resoniteColors.headless = document.documentElement.style.getPropertyValue('--headless');
+    config.resoniteColors.offline = document.documentElement.style.getPropertyValue('--offline');
+}
+
+function generateSettingsMenu() {
+    const settings = document.getElementById("settings");
+
+    const accountSettings = document.createElement("div");
+    accountSettings.className = "settings";
+    accountSettings.textContent = "User";
+    for (const [key, value] of Object.entries(config.user)) {
+
+    }
+    settings.appendChild(accountSettings);
+
+    const appColorSettings = document.createElement("div");
+    appColorSettings.className = "settings";
+    appColorSettings.textContent = "App Colors";
+    for (const [key, value] of Object.entries(config.appColors)) {
+        if (value.toString().includes("#")) {
+            let settingItemFragment = colorSettingItemTemplate.content.cloneNode(true);
+            let settingItem = settingItemFragment.querySelector(".settingItem");
+
+            let settingLabel = settingItem.querySelector("label");
+            settingLabel.textContent = key;
+            
+            let settingInput = settingItem.querySelector("input");
+            settingInput.name = `--${key}`;
+            settingInput.value = value;
+            
+            appColorSettings.appendChild(settingItem);
+        }
+    }
+    settings.appendChild(appColorSettings);
+
+    const resoniteColorSettings = document.createElement("div");
+    resoniteColorSettings.className = "settings";
+    resoniteColorSettings.textContent = "Resonite Colors";
+    for (const [key, value] of Object.entries(config.resoniteColors)) {
+        if (value.toString().includes("#")) {
+            let settingItemFragment = colorSettingItemTemplate.content.cloneNode(true);
+            let settingItem = settingItemFragment.querySelector(".settingItem");
+
+            let settingLabel = settingItem.querySelector("label");
+            settingLabel.textContent = key;
+            
+            let settingInput = settingItem.querySelector("input");
+            settingInput.name = `--${key}`;
+            settingInput.value = value;
+            
+            resoniteColorSettings.appendChild(settingItem);
+        }
+    }
+    settings.appendChild(resoniteColorSettings);
 }
 
 async function attemptLogin() {
@@ -110,6 +199,7 @@ async function attemptLogin() {
     loginButon.textContent = "Logging in...";
     config.user.username = document.getElementById("username").value;
     config.user.password = document.getElementById("password").value;
+    config.user.rememberMe = config.user.autoLogin = document.getElementById("rememberMe").checked;
 
     if (config == null) return;
 

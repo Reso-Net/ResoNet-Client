@@ -1,0 +1,49 @@
+#settings {
+    display: flex;
+    gap: var(--gap);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#settingsActions {
+    display: flex;
+    gap: var(--gap);
+    padding: var(--padding);
+    background-color: var(--tertiaryColor);
+    border-radius: var(--borderRadius);
+    justify-content: center;
+    align-self: center;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    background: var(--tertiaryColor);
+    padding: var(--padding);
+    border-radius: var(--borderRadius);
+    text-align: center;
+}
+
+.settingItem {
+    background-color: var(--secondaryColor);
+    display: flex;
+    align-items: center;
+    padding: var(--padding);
+    border-radius: var(--borderRadius);
+    gap: var(--gap);
+    justify-content: space-between;
+}
+
+.settingItem > input {
+    flex: 0 0 auto;
+    padding: 0;
+    background-color: var(--secondaryColor);
+}
+
+.subPanel:has(.settings) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    justify-content: center;
+}

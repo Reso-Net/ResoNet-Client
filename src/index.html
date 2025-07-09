@@ -9,6 +9,7 @@
         <title>ResoNet-Client</title>
         <link rel="icon" href="./resources/logo.ico">
         <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/settings.css">
         <link rel="stylesheet" href="styles/panels.css">
         <link rel="stylesheet" href="styles/users.css">
         <link rel="stylesheet" href="styles/profile.css">
@@ -32,6 +33,13 @@
                 </div>
             </button>
         </template>
+
+        <template id="colorSettingItemTemplate">
+            <div class="settingItem">
+                <label>Text Color</label>
+                <input type="color" name="" oninput="changeColor(this.name, this.value)">
+            </div>
+        </template>
     </head>
     
     <body>
@@ -43,6 +51,10 @@
                 </div>
                 <input type="text" id="username" placeholder="Username">
                 <input type="password" id="password" placeholder="Password">
+                <div>
+                    <label>Remember Me</label>
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                </div>
 
                 <button id="loginButton" onclick="attemptLogin()">Login</button>
             </div>
@@ -111,7 +123,13 @@
                 </div>
                 <div class="panel hidden" name="settings">
                     <div class="subPanel">
-                        <p>Settings</p>
+                        <div id="settings">
+                            
+                        </div>
+                        <div id="settingsActions">
+                            <button onclick="saveConfig()">Save Settings</button>
+                            <button onclick="resetConfig();">Reset Settings</button>
+                        </div>
                     </div>
                 </div>
             </div>
