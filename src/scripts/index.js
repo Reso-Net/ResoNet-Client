@@ -41,6 +41,7 @@ async function attemptLogin() {
     loginButon.textContent = "Logging in...";
     config.loadedConfig.user.username = document.getElementById("username").value;
     config.loadedConfig.user.password = document.getElementById("password").value;
+    config.loadedConfig.user.totp = document.getElementById("totp").value;
     config.loadedConfig.user.rememberMe = config.loadedConfig.user.autoLogin = document.getElementById("rememberMe").checked;
 
     if (config.loadedConfig == null) return;
