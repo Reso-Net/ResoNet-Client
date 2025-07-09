@@ -1,5 +1,4 @@
 const ResoNetLib = require("resonet-lib");
-
 const Config = require("./scripts/classes/config");
 
 let config = new Config();
@@ -36,7 +35,6 @@ function assignVariables() {
 }
 
 async function attemptLogin() {
-    console.log("Attemping to login");
     loginButon.disabled = true;
     loginButon.style.fontStyle = "italic";
     loginButon.style.backgroundColor = "var(--primaryColor)";

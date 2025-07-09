@@ -100,6 +100,7 @@ async function createUser(user) {
 async function updateUserStatus(status) {
     let onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
     const userItem = document.getElementById(status.userId);
+    if (userItem == null) createUser(client.fetchUser(status.userId));
     userItem.setAttribute("status", onlineStatus);
     
     const userStatus = userItem.querySelector(".status");
