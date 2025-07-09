@@ -11,8 +11,12 @@ let userList;
 let panels;
 let userItemTemplate;
 let userWorldItemTemplate;
+let userSearchInput;
 
 let selectedUser;
+
+let typingTimer;
+const typingTimeout = 500;
 
 const defaultConfig = {
     "user": {
@@ -57,7 +61,13 @@ function assignVariables() {
     userItemTemplate = document.getElementById("userItemTemplate");
     userWorldItemTemplate = document.getElementById("userWorldItemTemplate");
     loginButon = document.getElementById("loginButton");
-    userList = document.getElementById("userList");
+    userList = document.getElementById("userList");    
+    userSearchInput = document.getElementById("userSearchInput");
+    
+    // User search stuff
+    userSearchInput.addEventListener("keydown", () => {
+        clearTimeout(typingTimer);
+    })
 }
 
 async function loadAndUseConfig() {
@@ -165,42 +175,44 @@ function sortUsers() {
     users.forEach(user => userList.appendChild(user));
 }
 
-function nuke(query) {
-    const userList = document.getElementById("userList");
-    const children = Array.from(userList.children);
-    for (const child of children) {
-        if (child.hasAttribute("isContact") == true) continue;
-        if (child.getAttribute("username").toLowerCase().includes(query)) continue;
-        userList.removeChild(child);
-    }
-}
-
-async function searchUsers(query) {    
+async function searchUsers(query) {   
     query = query.trim().toLowerCase();
-    if (query != "" || query != null) {
+    if (query == "") {
+        filterUsers(query);
+        return;
+    }
+
+    clearTimeout(typingTimer); 
+    typingTimer = setTimeout(async () => {
+        const existingNonContacts = Array.from(userList.querySelectorAll(".userItem[iscontact='false']"));
+        existingNonContacts.forEach(el => { el.remove(); });
+
         await client.searchUsers(query);
         client.data.users.forEach(user => {
-            createUser(user);
-        });
-    }
+            const username = user.username.trim().toLowerCase();
 
-    filterUsers(query);
+            if (username.includes(query)) {
+                createUser(user);
+            }
+        });
+
+        filterUsers(query);
+    }, typingTimeout);
 }
 
-
 async function filterUsers(query) {
-    nuke(query);
-
     const normalizedQuery = query.trim().toLowerCase();
+
     const users = Array.from(userList.querySelectorAll(".userItem"));
 
     users.forEach(user => {
-        const username = (user.getAttribute("username") || user.textContent || "").toLowerCase();
+        const isContact = user.getAttribute("iscontact") === "true";
+        const username = user.getAttribute("username")?.trim().toLowerCase() || "";
 
-        if (username.includes(normalizedQuery)) {
-            user.classList.remove("hidden");
+        if (isContact) {
+            user.classList.toggle("hidden", !username.includes(normalizedQuery));
         } else {
-            user.classList.add("hidden");
+            user.remove();
         }
     });
 }
@@ -215,7 +227,7 @@ async function createUser(user) {
     userItem.id = `${user.userId}`;
     userItem.setAttribute("username", user.username);
     userItem.setAttribute("status", "Offline");
-    if (user.currentContact) userItem.setAttribute("isContact", true);
+    userItem.setAttribute("isContact", user.currentContact != null);
     
     const userProfilePicture = userItem.querySelector(".profilePicture");
     let pfp = client.formatAssetUrl(user.currentUser?.profile?.iconUrl) ?? "./resources/contact.svg";

@@ -72,7 +72,7 @@
                     <div id="userSearch">
                         <div class="subPanel">
                             <input type="text" placeholder="Search User..." id="userSearchInput" oninput="filterUsers(this.value)">
-                            <button type="submit" onclick="searchUsers(document.getElementById('userSearchInput').value)">
+                            <button type="submit" id="searchUserbutton" class="hidden" onclick="searchUsers(document.getElementById('userSearchInput').value)">
                                 <img src="./resources/search.svg">
                             </button>
                         </div>
