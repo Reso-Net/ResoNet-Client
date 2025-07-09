@@ -13,7 +13,9 @@
         <link rel="stylesheet" href="styles/panels.css">
         <link rel="stylesheet" href="styles/users.css">
         <link rel="stylesheet" href="styles/profile.css">
-        <script src="./index.js"></script>
+        <script src="./scripts/index.js"></script>
+        <script src="./scripts/settings.js"></script>
+        <script src="./scripts/user.js"></script>
 
         <template id="userItemTemplate">
             <button class="userItem" onclick="selectUser(this.id)">
@@ -34,10 +36,10 @@
             </button>
         </template>
 
-        <template id="colorSettingItemTemplate">
+        <template id="settingItemTemplate">
             <div class="settingItem">
-                <label>Text Color</label>
-                <input type="color" name="" oninput="changeColor(this.name, this.value)">
+                <label>Setting</label>
+                <input type="" name="">
             </div>
         </template>
     </head>
@@ -123,9 +125,10 @@
                 </div>
                 <div class="panel hidden" name="settings">
                     <div class="subPanel">
-                        <div id="settings">
-                            
-                        </div>
+                        <h1 id="settingsLabel">
+                            Settings
+                        </h1>
+                        <div id="settings"></div>
                         <div id="settingsActions">
                             <button onclick="saveConfig()">Save Settings</button>
                             <button onclick="resetConfig();">Reset Settings</button>

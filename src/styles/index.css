@@ -119,21 +119,10 @@ input {
     padding-right: var(--padding);
 }
 
-input[type="checkbox"] {
-    flex: 0 0 auto;
-    aspect-ratio: 1 / 1;
-    cursor: pointer;
-    background-color: var(--tertiaryColor); /* Unchecked background */
-    border-radius: var(--borderRadius);
-    appearance: none;
-    -webkit-appearance: none;
-    position: relative;
-}
-
 .loginPanel > div:nth-of-type(2) {
     display: flex;
     gap: var(--gap);
-    align-items: center;
+    align-items: stretch;
 }
 
 .loginPanel > div:nth-of-type(2) > label {
@@ -143,16 +132,26 @@ input[type="checkbox"] {
     flex-grow: 1;
 }
 
-#rememberMe {
-    background-color: var(--tertiaryColor); /* Unchecked background */
+[type="checkbox"] {
+    background-color: var(--tertiaryColor);
     border-radius: var(--borderRadius);
     appearance: none;
     -webkit-appearance: none;
     cursor: pointer;
     position: relative;
     transition: var(--lerpTime) linear;
+    flex: 0 0 auto;
+    aspect-ratio: 1 / 1;
 }
 
-#rememberMe:checked {
-    background-color: var(--primaryColor); /* Checked background */
+[type="checkbox"]:checked {
+    background-color: var(--primaryColor); 
+}
+
+[type="checkbox"]:hover {
+    filter: brightness(1.25);
+}
+
+[type="checkbox"]:disabled {
+    filter: brightness(0.75);
 }
