@@ -277,6 +277,7 @@ async function processMessages(user) {
 
     if (user.messages == null) await client.fetchMessages(user.userId);
     if (user.messages == null) return;
+    if (user.userId != selectedUser.userId) return;
 
     for (let index = 0; index < user.messages.length; index++) {
         const message = user.messages[index];
