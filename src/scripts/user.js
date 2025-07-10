@@ -278,9 +278,10 @@ async function processMessages(user) {
     if (user.messages == null) await client.fetchMessages(user.userId);
     if (user.messages == null) return;
 
-    user.messages.forEach(message => {
-        createMessageItem(message);
-    });
+    for (let index = 0; index < user.messages.length; index++) {
+        const message = user.messages[index];
+        await createMessageItem(message);
+    }
 }
 
 async function sendMessage(content) {
@@ -291,24 +292,51 @@ async function sendMessage(content) {
 
 function createMessageItem(message) {
     const userMessages = document.getElementById("userMessages");
+    let userMessageItem;
 
     if (message.messageType == "Text") {
-        let userMessageItemFragment = userMessageItemTemplate.content.cloneNode(true);
-        let userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
-        
+        let userMessageItemFragment = textMessageItemTemplate.content.cloneNode(true);
+        userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
         userMessageItem.querySelectorAll("p")[0].textContent = message.content;
-        userMessageItem.querySelectorAll("p")[1].textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
-        userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
-        userMessages.appendChild(userMessageItem);
-    } else {
-        let userMessageItemFragment = userMessageItemTemplate.content.cloneNode(true);
-        let userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
+    } 
+    else if (message.messageType == "Sound") {
+        let userMessageItemFragment = audioMessageItemTemplate.content.cloneNode(true);
+        userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
+        
+        let audio = userMessageItem.querySelector("audio");
+        let button = userMessageItem.querySelector("button");
+               
+        audio.src = client.formatAssetUrl(JSON.parse(message.content).assetUri);
+        button.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            button.textContent = 'Pause';
+        } else {
+            audio.pause();
+            button.textContent = 'Play';
+        }
+        });
+
+        audio.addEventListener('ended', () => {
+            button.textContent = 'Play';
+        });
+    } 
+    else if (message.messageType == "Object") {
+        let objectMessageItemFragment = objectMessageItemTemplate.content.cloneNode(true);
+        userMessageItem = objectMessageItemFragment.querySelector(".userMessageItem");
+        let image = userMessageItem.querySelector("img");
+        image.src = client.formatAssetUrl(JSON.parse(message.content).thumbnailUri);
+    }
+    else {
+        let userMessageItemFragment = textMessageItemTemplate.content.cloneNode(true);
+        userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
         
         userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED";
-        userMessageItem.querySelectorAll("p")[1].textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
-        userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
-        userMessages.appendChild(userMessageItem);
     }
+
+    userMessageItem.lastElementChild.textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
+    userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
+    userMessages.appendChild(userMessageItem);
 
     userMessages.scrollTo({
         top: userMessages.scrollHeight,

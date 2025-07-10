@@ -43,9 +43,24 @@
             </div>
         </template>
 
-        <template id="userMessageItemTemplate">
+        <template id="textMessageItemTemplate">
             <div class="userMessageItem">
                 <p></p>
+                <p style="opacity: 50%;"></p>
+            </div>
+        </template>
+
+        <template id="audioMessageItemTemplate">
+            <div class="userMessageItem">
+                <audio></audio>
+                <button>Play</button>
+                <p style="opacity: 50%;"></p>
+            </div>
+        </template>
+
+        <template id="objectMessageItemTemplate">
+            <div class="userMessageItem">
+                <img>
                 <p style="opacity: 50%;"></p>
             </div>
         </template>
@@ -134,7 +149,7 @@
 
                         </div>
                         <div class="subPanel">
-                            <input type="text" placeholder="Write a message..." name="userMessageInput" id="userMessageInput">
+                            <input type="text" placeholder="Write a message..." name="userMessageInput" id="userMessageInput" onsubmit="sendMessage(this.value)">
                             <button type="submit" for="userMessageInput" onclick="sendMessage(document.getElementById('userMessageInput').value)">
                                 <img src="./resources/send.svg">
                             </button>

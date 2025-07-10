@@ -13,7 +13,7 @@ let userSearchInput;
 let userItemTemplate;
 let userWorldItemTemplate;
 let settingItemTemplate;
-let messageItemTemplate;
+let textMessageItemTemplate, audioMessageItemTemplate, objectMessageItemTemplate;
 
 document.addEventListener("DOMContentLoaded", async (event) => {    
     assignVariables();
@@ -28,7 +28,9 @@ function assignVariables() {
     userList = document.getElementById("userList");    
     userSearchInput = document.getElementById("userSearchInput");
     settingItemTemplate = document.getElementById("settingItemTemplate");
-    messageItemTemplate = document.getElementById("messageItemTemplate");
+    textMessageItemTemplate = document.getElementById("textMessageItemTemplate");
+    audioMessageItemTemplate = document.getElementById("audioMessageItemTemplate");
+    objectMessageItemTemplate = document.getElementById("objectMessageItemTemplate");
     
     // User search stuff
     userSearchInput.addEventListener("keydown", () => {

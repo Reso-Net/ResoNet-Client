@@ -31,6 +31,13 @@
     background-color: var(--tertiaryColor);
     padding: var(--padding);
     border-radius: var(--borderRadius);
+    gap: var(--gap);
+    display: flex;
+    flex-direction: column;
+}
+
+.userMessageItem:has(> img) {
+    max-width: 50%;
 }
 
 .userMessageItem[ismine=true] {
