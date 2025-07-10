@@ -7,9 +7,9 @@ class Config {
         "user": {
             "username": "",
             "password": "",
-            "totp": "",
             "rememberMe": true,
-            "autoLogin": false
+            "autoLogin": false,
+            "use2fa": false
         },
         "appVisuals": {
             "color": "#efece7",

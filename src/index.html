@@ -42,6 +42,13 @@
                 <input type="" name="">
             </div>
         </template>
+
+        <template id="userMessageItemTemplate">
+            <div class="userMessageItem">
+                <p></p>
+                <p style="opacity: 50%;"></p>
+            </div>
+        </template>
     </head>
     
     <body>
@@ -53,10 +60,15 @@
                 </div>
                 <input type="text" id="username" placeholder="Username">
                 <input type="password" id="password" placeholder="Password">
-                <input type="password" id="totp" placeholder="Totp">
+                <input type="password" id="totp" placeholder="2FA Code">
                 <div>
                     <label>Remember Me</label>
                     <input type="checkbox" id="rememberMe" name="rememberMe">
+                </div>
+
+                <div>
+                    <label>Auto Login</label>
+                    <input type="checkbox" id="autoLogin" name="autoLogin">
                 </div>
 
                 <button id="loginButton" onclick="attemptLogin()">Login</button>
@@ -81,7 +93,9 @@
 
             <div class="panels">
                 <div class="panel" name="home">
-                    <div class="subPanel"></div>
+                    <div class="subPanel">
+                        <p>Not Implemented Yet</p>
+                    </div>
                 </div>
                 <div class="panel hidden" name="contacts">
                     <div id="userSearch">
@@ -115,13 +129,21 @@
 
                         </div>
                     </div>
-                    <div class="subPanel" id="userMessages">
+                    <div class="subPanel" id="userMessagePanel">
+                        <div id="userMessages">
 
+                        </div>
+                        <div class="subPanel">
+                            <input type="text" placeholder="Write a message..." name="userMessageInput" id="userMessageInput">
+                            <button type="submit" for="userMessageInput" onclick="sendMessage(document.getElementById('userMessageInput').value)">
+                                <img src="./resources/send.svg">
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="panel hidden" name="worlds">
                     <div class="subPanel">
-
+                        <p>Not Implemented Yet</p>
                     </div>
                 </div>
                 <div class="panel hidden" name="settings">

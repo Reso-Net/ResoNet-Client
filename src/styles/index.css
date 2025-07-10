@@ -132,6 +132,19 @@ input {
     flex-grow: 1;
 }
 
+.loginPanel > div:nth-of-type(3) {
+    display: flex;
+    gap: var(--gap);
+    align-items: stretch;
+}
+
+.loginPanel > div:nth-of-type(3) > label {
+    padding: var(--padding);
+    background-color: var(--tertiaryColor);
+    border-radius: var(--borderRadius);
+    flex-grow: 1;
+}
+
 [type="checkbox"] {
     background-color: var(--tertiaryColor);
     border-radius: var(--borderRadius);

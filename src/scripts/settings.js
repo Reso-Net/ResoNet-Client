@@ -62,7 +62,7 @@ function createSettingItem(pathArray, value, config) {
         settingInput.type = "text";
         settingInput.value = value;
 
-        if (pathArray[pathArray.length - 1] == "totp" || pathArray[pathArray.length - 1] == "password") 
+        if (pathArray[pathArray.length - 1] == "password") 
             settingInput.type = "password";
 
         settingInput.addEventListener("input", () => {

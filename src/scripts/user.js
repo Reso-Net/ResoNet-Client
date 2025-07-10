@@ -100,7 +100,8 @@ async function createUser(user) {
 async function updateUserStatus(status) {
     let onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
     const userItem = document.getElementById(status.userId);
-    if (userItem == null) createUser(client.fetchUser(status.userId));
+    if (userItem == null) return;
+
     userItem.setAttribute("status", onlineStatus);
     
     const userStatus = userItem.querySelector(".status");
@@ -153,8 +154,11 @@ async function selectUser(userId) {
     if (userId == client.data.userId) userProfile.querySelector("#actions").classList.add("hidden");
     else userProfile.querySelector("#actions").classList.remove("hidden");
 
+    document.getElementById(userId).style.filter = "";
+
     processBadges(selectedUser);
     processSessions(selectedUser);
+    processMessages(selectedUser);
 }
 
 function processBadges(user) {
@@ -263,4 +267,51 @@ async function blockAvatar() {
 
 async function blockMutual() {
     console.log("Not implemented yet");
+}
+
+async function processMessages(user) {
+    const userMessages = document.getElementById("userMessages");
+    while(userMessages.hasChildNodes()) {
+        userMessages.lastChild.remove();
+    }
+
+    if (user.messages == null) await client.fetchMessages(user.userId);
+    if (user.messages == null) return;
+
+    user.messages.forEach(message => {
+        createMessageItem(message);
+    });
+}
+
+async function sendMessage(content) {
+    document.getElementById("userMessageInput").value = "";
+    let message = await client.sendMessage(selectedUser.userId, content)
+    createMessageItem(message);
+}
+
+function createMessageItem(message) {
+    const userMessages = document.getElementById("userMessages");
+
+    if (message.messageType == "Text") {
+        let userMessageItemFragment = userMessageItemTemplate.content.cloneNode(true);
+        let userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
+        
+        userMessageItem.querySelectorAll("p")[0].textContent = message.content;
+        userMessageItem.querySelectorAll("p")[1].textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
+        userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
+        userMessages.appendChild(userMessageItem);
+    } else {
+        let userMessageItemFragment = userMessageItemTemplate.content.cloneNode(true);
+        let userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
+        
+        userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED";
+        userMessageItem.querySelectorAll("p")[1].textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
+        userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
+        userMessages.appendChild(userMessageItem);
+    }
+
+    userMessages.scrollTo({
+        top: userMessages.scrollHeight,
+        behavior: "smooth"
+    });
 }
