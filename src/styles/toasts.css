@@ -1,0 +1,67 @@
+.toastContainer {
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+    right: 0;
+    top: 0;
+    padding: var(--padding);
+    gap: var(--gap);
+    z-index: 69;
+    transition: 0.25s ease-in-out;
+}
+
+.toastItem {
+    background-color: var(--secondaryColor);
+    border-color: var(--unknownColor);
+    border-radius: var(--borderRadius);
+    border-width: 2px;
+    border-style: solid;
+    gap: var(--gap);
+    display: flex;
+    flex-direction: row;
+    padding: var(--padding);
+    justify-content: space-between;
+    min-width: calc(100vw / 4);
+    max-width: calc(100vw / 4);
+    opacity: 0;
+    transition: opacity var(--lerpTime) ease-in-out;
+}
+
+.toastItem {
+    opacity: 0;
+    transition: opacity var(--lerpTime) ease-in-out;
+}
+
+.toastItem[active="true"] {
+    opacity: 1;
+}
+
+.toastItem[active="false"] {
+    opacity: 0;
+}
+
+.toastItem[type="log"] {
+    border-color: var(--logColor);
+}
+
+.toastItem[type="warn"] {
+    border-color: var(--warnColor);
+}
+
+.toastItem[type="error"] {
+    border-color: var(--errorColor);
+}
+
+.toastItem[type="success"] {
+    border-color: var(--unknownColor);
+}
+
+.toastItem > img {
+    aspect-ratio: 1 / 1;
+    min-width: 24px;
+    max-width: 24px;
+}
+
+.toastItem > p {
+    align-self: center;
+}

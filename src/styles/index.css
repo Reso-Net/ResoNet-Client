@@ -21,6 +21,13 @@
     margin: 0;
 }
 
+p {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+
 html, body, .page {
     height: 100%;
     width: 100%;

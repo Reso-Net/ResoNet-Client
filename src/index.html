@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="styles/users.css">
         <link rel="stylesheet" href="styles/profile.css">
         <link rel="stylesheet" href="styles/messages.css">
+        <link rel="stylesheet" href="styles/toasts.css">
         <script src="./scripts/settings.js"></script>
         <script src="./scripts/user.js"></script>
         <script src="./scripts/main.js"></script>
@@ -81,9 +82,18 @@
                 <p style="opacity: 50%;"></p>
             </div>
         </template>
+
+        <template id="toastItemTemplate">
+            <div class="toastItem" type="log" active="false">
+                <p>Toast Notification</p>
+                <img src="./resources/contacts.svg">
+            </div>
+        </template>
     </head>
     
     <body>
+        <div class="toastContainer" id="toastContainer"></div>
+
         <div id="loginPanel"> 
             <div class="loginPanel">
                 <div class="loginBanner">

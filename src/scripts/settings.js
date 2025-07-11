@@ -131,6 +131,11 @@ function applyStylePreferences() {
     root.style.setProperty('--gap', config.loadedConfig.appVisuals.gap);
     root.style.setProperty('--borderRadius', config.loadedConfig.appVisuals.borderRadius);
 
+    root.style.setProperty('--logColor', config.loadedConfig.appVisuals.logColor);
+    root.style.setProperty('--warnColor', config.loadedConfig.appVisuals.warnColor);
+    root.style.setProperty('--errorColor', config.loadedConfig.appVisuals.errorColor);
+    root.style.setProperty('--unknownColor', config.loadedConfig.appVisuals.unknownColor);
+
     root.style.setProperty('--socialable', config.loadedConfig.resoniteColors.socialable);
     root.style.setProperty('--online', config.loadedConfig.resoniteColors.online);
     root.style.setProperty('--busy', config.loadedConfig.resoniteColors.busy);

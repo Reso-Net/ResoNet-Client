@@ -154,7 +154,7 @@ async function selectUser(userId) {
     if (userId == client.data.userId) userProfile.querySelector("#actions").classList.add("hidden");
     else userProfile.querySelector("#actions").classList.remove("hidden");
 
-    userProfile.querySelector("#actions").firstChild.innerHTML = selectedUser.currentContact.isAccepted ? "Remove Contact" : "Add Contact";
+    userProfile.querySelector("#actions").querySelectorAll("button")[0].innerHTML = selectedUser.currentContact.isAccepted ? "Remove Contact" : "Add Contact";
 
     document.getElementById(userId).style.filter = "";
 

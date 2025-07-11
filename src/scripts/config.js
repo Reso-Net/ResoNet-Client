@@ -18,7 +18,11 @@ class Config {
             "tertiaryColor": "#171a1d",
             "padding": "8px",
             "gap": "8px",
-            "borderRadius": "8px"
+            "borderRadius": "8px",
+            "logColor": "#ADD9F4",
+            "warnColor": "#F4C95D",
+            "errorColor": "#FF5376",
+            "unknownColor": "#006C67",
         },
         "resoniteColors": {
             "socialable": "#61d1fa",

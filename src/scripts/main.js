@@ -1,5 +1,5 @@
 const ResoNetLib = require("resonet-lib");
-const Config = require("./scripts/classes/config");
+const Config = require("./scripts/config");
 
 let config = new Config();
 let client;
@@ -19,6 +19,54 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     assignVariables();
     await loadAndUseConfig();
 });
+
+function createToast(logLevel, content, icon = "", callback = null) {
+    let fragment = document.getElementById("toastItemTemplate").content.cloneNode(true);
+    let toastItem = fragment.querySelector(".toastItem");
+    toastItem.setAttribute("type", logLevel);
+    toastItem.querySelector("p").textContent = content;
+    document.getElementById("toastContainer").appendChild(toastItem);
+    
+    if (icon == "") {
+        switch(logLevel) {
+            case "log":
+                icon = "./resources/info.svg";
+                break;
+            case "warn":
+                icon = "./resources/warning.svg";
+                break;
+            case "error":
+                icon = "./resources/dangerous.svg";
+                break;
+            case "success":
+                icon = "./resources/check_circle.svg";
+                break;
+            case "unkown":
+                icon = "./resources/help.svg";
+                break;
+        }
+    }
+
+    if (typeof callback === 'function') {
+        toastItem.addEventListener("click", async () => { 
+            callback(); 
+            toastItem.setAttribute("active", false);
+            setTimeout(() => { toastItem.remove(); }, 250);
+        });
+
+    }
+
+    toastItem.querySelector("img").src = icon;
+
+    setTimeout(() => {
+        toastItem.setAttribute("active", true);
+    }, 3);
+
+    setTimeout(() => {
+        toastItem.setAttribute("active", false);
+        setTimeout(() => { toastItem.remove(); }, 250);
+    }, 2500);
+}
 
 function assignVariables() {
     panels = document.querySelectorAll(".panel");
@@ -41,6 +89,8 @@ function assignVariables() {
 }
 
 async function attemptLogin() {
+    createToast("log", "Attempting to login");
+
     loginButon.disabled = true;
     loginButon.style.fontStyle = "italic";
     loginButon.style.backgroundColor = "var(--primaryColor)";
@@ -63,6 +113,7 @@ async function attemptLogin() {
 
     client = new ResoNetLib(clientConfig);
     await client.start().then(async () => {
+        createToast("success", "Successfully logged in!");
         config.saveConfig();
 
         document.getElementById("loginPanel").classList.add("hidden");
@@ -74,6 +125,17 @@ async function attemptLogin() {
                 createMessageItem(message);
                 client.markMessagesAsRead({ "senderId": message.senderId, "readTime": (new Date(Date.now())).toISOString(), "ids": [ message.id ] });
             } else {
+                let sender = await client.fetchUser(message.senderId);
+                let icon = client.formatAssetUrl(sender.currentUser.profile?.iconUrl) ?? "./resources/chat_bubble.svg";
+
+                switch (message.messageType) {
+                    case "Text":
+                        createToast("log", `${sender.username}: ${message.content}`, icon, () => selectUser(sender.userId)); 
+                        break;
+                    case "Object":
+                        createToast("log", `${sender.username} sent an object: ${JSON.parse(message.content).name}`, icon, () => selectUser(sender.userId)); 
+                        break;
+                }
                 document.getElementById(message.senderId).style.filter = "brightness(5)";
             }
         });
