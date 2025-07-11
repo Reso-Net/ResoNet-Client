@@ -154,6 +154,8 @@ async function selectUser(userId) {
     if (userId == client.data.userId) userProfile.querySelector("#actions").classList.add("hidden");
     else userProfile.querySelector("#actions").classList.remove("hidden");
 
+    userProfile.querySelector("#actions").firstChild.innerHTML = selectedUser.currentContact.isAccepted ? "Remove Contact" : "Add Contact";
+
     document.getElementById(userId).style.filter = "";
 
     processBadges(selectedUser);
@@ -254,7 +256,8 @@ function createBadge(badgeUrl, format = true) {
 }
 
 async function addRemoveContact() {
-    console.log("Not implemented yet");
+    if (selectedUser.currentContact.isAccepted) await client.removeContact(selectedUser.userId);
+    else await client.addContact(selectedUser.userId);
 }
 
 async function blockContact() {
