@@ -307,10 +307,11 @@ function createMessageItem(message) {
     if (message.messageType == "Text") 
         userMessageItem.querySelectorAll("p")[0].textContent = message.content;
     else if (message.messageType == "Sound") {       
+        let content = JSON.parse(message.content);
         let audio = userMessageItem.querySelector("audio");
         let button = userMessageItem.querySelector("button");
-               
-        audio.src = client.formatAssetUrl(JSON.parse(message.content).assetUri);
+            
+        audio.src = client.formatAssetUrl(content.assetUri);
         button.addEventListener("click", () => {
         if (audio.paused) {
             audio.play();
@@ -324,27 +325,32 @@ function createMessageItem(message) {
         audio.addEventListener("ended", () => {
             button.textContent = "Play";
         });
+
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name)
     } 
     else if (message.messageType == "Object") {
         let image = userMessageItem.querySelector("img");
-        image.src = client.formatAssetUrl(JSON.parse(message.content).thumbnailUri);
-        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(JSON.parse(message.content).name);
+        let content = JSON.parse(message.content);
+
+        image.src = client.formatAssetUrl(content.thumbnailUri);
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
     } 
     else if (message.messageType == "SessionInvite") {
+        let content = JSON.parse(message.content);
         let userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
         let userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
 
-        userWorldItem.setAttribute("name", client.stripTags(JSON.parse(message.content).name));
-        userWorldItem.setAttribute("sessionId", JSON.parse(message.content).sessionId);
-        userWorldItem.querySelector("img").src = JSON.parse(message.content).thumbnailUrl ?? "./resources/public.svg";
-        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(JSON.parse(message.content).name);
-        userWorldItem.querySelectorAll("p")[1].textContent = JSON.parse(message.content).hostUsername + ` (${JSON.parse(message.content).joinedUsers}/${JSON.parse(message.content).maxUsers})`
+        userWorldItem.setAttribute("name", client.stripTags(content.name));
+        userWorldItem.setAttribute("sessionId", content.sessionId);
+        userWorldItem.querySelector("img").src = content.thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
+        userWorldItem.querySelectorAll("p")[1].textContent = content.hostUsername + ` (${content.joinedUsers}/${content.maxUsers})`
         userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
 
         userMessageItem.querySelector("div").appendChild(userWorldItem)
     } else if (message.messageType == "InviteRequest") {
         let content = JSON.parse(message.content);
-        userMessageItem.querySelectorAll("p")[0].textContent = `${content.requestingFromUsername} wants to join ${content.forSessionName}`;
+        userMessageItem.querySelectorAll("p")[0].textContent = `${content.usernameToInvite} wants to join ${content.forSessionName}`;
     }
     else
         userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED: " + message.messageType;
