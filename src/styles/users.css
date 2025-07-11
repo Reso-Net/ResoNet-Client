@@ -27,28 +27,6 @@
     align-items: center;
 }
 
-.userMessageItem {
-    background-color: var(--tertiaryColor);
-    padding: var(--padding);
-    border-radius: var(--borderRadius);
-    gap: var(--gap);
-    display: flex;
-    flex-direction: column;
-}
-
-.userMessageItem:has(> img) {
-    max-width: 50%;
-}
-
-.userMessageItem[ismine=true] {
-    text-align: end;
-    align-self: end;
-}
-
-.userMessageItem[ismine=false] {
-    align-self: start;
-}
-
 #userList {
     display: flex;
     border-radius: var(--borderRadius);

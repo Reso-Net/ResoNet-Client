@@ -233,12 +233,12 @@ function processSessions(contact) {
         let isPresent = session.sessionUsers.find(user => user.userID === contact.contactUserId)?.isPresent;
 
         userWorldItem.style.backgroundColor = isPresent ? "var(--online)" : "var(--away)";
-        userWorldItem.setAttribute('name', client.stripTags(session.name));
-        userWorldItem.setAttribute('sessionId', session.sessionId);
-        userWorldItem.querySelector('img').src = session.thumbnailUrl ?? "./resources/public.svg";
-        userWorldItem.querySelectorAll('p')[0].textContent = client.stripTags(session.name);
-        userWorldItem.querySelectorAll('p')[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
-        userWorldItem.querySelectorAll('p')[1].style.opacity = "50%";
+        userWorldItem.setAttribute("name", client.stripTags(session.name));
+        userWorldItem.setAttribute("sessionId", session.sessionId);
+        userWorldItem.querySelector("img").src = session.thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(session.name);
+        userWorldItem.querySelectorAll("p")[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
+        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
         
         userWorlds.appendChild(userWorldItem);
     }
@@ -293,47 +293,61 @@ async function sendMessage(content) {
 
 function createMessageItem(message) {
     const userMessages = document.getElementById("userMessages");
-    let userMessageItem;
+    let itemFramgment;
 
-    if (message.messageType == "Text") {
-        let userMessageItemFragment = textMessageItemTemplate.content.cloneNode(true);
-        userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
+    if (message.messageType == "Text") itemFramgment = textMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "Sound") itemFramgment = audioMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "Object") itemFramgment = objectMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "SessionInvite") itemFramgment = sessionInviteMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "InviteRequest") itemFramgment = inviteRequestMessageItemTemplate.content.cloneNode(true);
+    else itemFramgment = textMessageItemTemplate.content.cloneNode(true);
+
+    let userMessageItem = itemFramgment.querySelector(".userMessageItem");
+
+    if (message.messageType == "Text") 
         userMessageItem.querySelectorAll("p")[0].textContent = message.content;
-    } 
-    else if (message.messageType == "Sound") {
-        let userMessageItemFragment = audioMessageItemTemplate.content.cloneNode(true);
-        userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
-        
+    else if (message.messageType == "Sound") {       
         let audio = userMessageItem.querySelector("audio");
         let button = userMessageItem.querySelector("button");
                
         audio.src = client.formatAssetUrl(JSON.parse(message.content).assetUri);
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
         if (audio.paused) {
             audio.play();
-            button.textContent = 'Pause';
+            button.textContent = "Pause";
         } else {
             audio.pause();
-            button.textContent = 'Play';
+            button.textContent = "Play";
         }
         });
 
-        audio.addEventListener('ended', () => {
-            button.textContent = 'Play';
+        audio.addEventListener("ended", () => {
+            button.textContent = "Play";
         });
     } 
     else if (message.messageType == "Object") {
-        let objectMessageItemFragment = objectMessageItemTemplate.content.cloneNode(true);
-        userMessageItem = objectMessageItemFragment.querySelector(".userMessageItem");
         let image = userMessageItem.querySelector("img");
         image.src = client.formatAssetUrl(JSON.parse(message.content).thumbnailUri);
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(JSON.parse(message.content).name);
+    } 
+    else if (message.messageType == "SessionInvite") {
+        let userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
+        let userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
+
+        userWorldItem.setAttribute("name", client.stripTags(JSON.parse(message.content).name));
+        userWorldItem.setAttribute("sessionId", JSON.parse(message.content).sessionId);
+        userWorldItem.querySelector("img").src = JSON.parse(message.content).thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(JSON.parse(message.content).name);
+        userWorldItem.querySelectorAll("p")[1].textContent = JSON.parse(message.content).hostUsername + ` (${JSON.parse(message.content).joinedUsers}/${JSON.parse(message.content).maxUsers})`
+        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
+
+        userMessageItem.querySelector("div").appendChild(userWorldItem)
+    } else if (message.messageType == "InviteRequest") {
+        let content = JSON.parse(message.content);
+        userMessageItem.querySelectorAll("p")[0].textContent = `${content.requestingFromUsername} wants to join ${content.forSessionName}`;
     }
-    else {
-        let userMessageItemFragment = textMessageItemTemplate.content.cloneNode(true);
-        userMessageItem = userMessageItemFragment.querySelector(".userMessageItem");
-        
-        userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED";
-    }
+    else
+        userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED: " + message.messageType;
 
     userMessageItem.lastElementChild.textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
     userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);

@@ -92,6 +92,7 @@
     gap: var(--gap);
     min-height: 80px;
     max-height: 80px;
+    flex-grow: 1;
 }
 
 .userWorldItem > div {

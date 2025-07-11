@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="styles/panels.css">
         <link rel="stylesheet" href="styles/users.css">
         <link rel="stylesheet" href="styles/profile.css">
+        <link rel="stylesheet" href="styles/messages.css">
         <script src="./scripts/settings.js"></script>
         <script src="./scripts/user.js"></script>
         <script src="./scripts/index.js"></script>
@@ -44,14 +45,14 @@
         </template>
 
         <template id="textMessageItemTemplate">
-            <div class="userMessageItem">
+            <div class="userMessageItem" type="Text">
                 <p></p>
                 <p style="opacity: 50%;"></p>
             </div>
         </template>
 
         <template id="audioMessageItemTemplate">
-            <div class="userMessageItem">
+            <div class="userMessageItem" type="Audio">
                 <audio></audio>
                 <button>Play</button>
                 <p style="opacity: 50%;"></p>
@@ -59,8 +60,23 @@
         </template>
 
         <template id="objectMessageItemTemplate">
-            <div class="userMessageItem">
+            <div class="userMessageItem" type="Object">
                 <img>
+                <p style="opacity: 50%;"></p>
+                <p style="opacity: 50%;"></p>
+            </div>
+        </template>
+
+        <template id="sessionInviteMessageItemTemplate">
+            <div class="userMessageItem SessionInvite" type="SessionInvite">
+                <div style="display: flex;"></div>
+                <p style="opacity: 50%;"></p>
+            </div>
+        </template>
+
+        <template id="inviteRequestMessageItemTemplate">
+            <div class="userMessageItem" type="InviteRequest">
+                <p></p>
                 <p style="opacity: 50%;"></p>
             </div>
         </template>

@@ -1,0 +1,32 @@
+.userMessageItem[type="InviteRequest"] > p:first-of-type {
+    align-self: center;
+    background-color: var(--secondaryColor);
+    padding: var(--padding);
+    border-radius: var(--borderRadius);
+}
+
+.userMessageItem {
+    max-width: 50%;
+}
+
+.userMessageItem[type='SessionInvite']:first-child {
+    display: flex;
+}
+
+.userMessageItem {
+    background-color: var(--tertiaryColor);
+    padding: var(--padding);
+    border-radius: var(--borderRadius);
+    gap: var(--gap);
+    display: flex;
+    flex-direction: column;
+}
+
+.userMessageItem[ismine=true] {
+    text-align: end;
+    align-self: end;
+}
+
+.userMessageItem[ismine=false] {
+    align-self: start;
+}
