@@ -140,6 +140,8 @@ async function updateUserStatus(status) {
 }
 
 async function selectUser(userId) {
+    if (selectedUser != null && selectedUser.userId == userId) return; 
+
     selectedUser = await client.fetchUser(userId);
 
     const userProfile = document.querySelector("#userProfile");
@@ -308,7 +310,7 @@ function createMessageItem(message) {
     let userMessageItem = itemFramgment.querySelector(".userMessageItem");
 
     if (message.messageType == "Text") 
-        userMessageItem.querySelectorAll("p")[0].textContent = message.content;
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(message.content);
     else if (message.messageType == "Sound") {       
         let content = JSON.parse(message.content);
         let audio = userMessageItem.querySelector("audio");

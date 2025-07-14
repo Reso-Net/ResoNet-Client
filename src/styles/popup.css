@@ -1,0 +1,32 @@
+.popup {
+    position: absolute;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+#popup {
+    display: flex;
+    flex-direction: column;
+    min-width: calc(100vw / 2);
+    max-width: calc(100vh / 2);
+    background-color: var(--primaryColor);
+    padding: var(--padding);
+    gap: var(--gap);
+    border-radius: var(--borderRadius);
+}
+
+#popup > img {
+    border-radius: var(--borderRadius);
+}
+
+#popup > div {
+    background-color: var(--secondaryColor);
+    padding: var(--padding);
+    gap: var(--gap);
+    border-radius: var(--borderRadius); 
+}

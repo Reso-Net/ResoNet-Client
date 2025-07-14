@@ -197,3 +197,9 @@ function swapPanel(panelName) {
         }
     });
 }
+
+function getNoAssetReplacement() {
+    let random = Math.floor(Math.random() * 3);
+    let asset = `./resources/no_assets/noasset_${random}.png`;
+    return asset;
+}

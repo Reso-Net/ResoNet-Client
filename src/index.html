@@ -15,8 +15,10 @@
         <link rel="stylesheet" href="styles/profile.css">
         <link rel="stylesheet" href="styles/messages.css">
         <link rel="stylesheet" href="styles/toasts.css">
+        <link rel="stylesheet" href="styles/popup.css">
         <script src="./scripts/settings.js"></script>
         <script src="./scripts/user.js"></script>
+        <script src="./scripts/sessions.js"></script>
         <script src="./scripts/main.js"></script>
 
         <template id="userItemTemplate">
@@ -29,7 +31,7 @@
         </template>
 
         <template id="userWorldItemTemplate">
-            <button class="userWorldItem" onclick="console.log('Previewing World: ', this.name)">
+            <button class="userWorldItem" onclick="previewSession(this.getAttribute('sessionid'))">
                 <img class="profilePicture">
                 <div>
                     <p></p>
@@ -93,6 +95,14 @@
     
     <body>
         <div class="toastContainer" id="toastContainer"></div>
+        <div class="popup hidden" onclick="closePopupPreview()">
+            <div id="popup">
+                <img src="./resources/point.png">
+                <div>
+                    <p>Lorem Ipsum</p>
+                </div>
+            </div>
+        </div>
 
         <div id="loginPanel"> 
             <div class="loginPanel">

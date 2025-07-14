@@ -2,8 +2,8 @@
     position: absolute;
     display: flex;
     flex-direction: column-reverse;
-    right: 0;
-    top: 0;
+    right: var(--padding);
+    top: var(--padding);
     padding: var(--padding);
     gap: var(--gap);
     z-index: 69;
