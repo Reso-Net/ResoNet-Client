@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column-reverse;
     right: var(--padding);
-    top: var(--padding);
+    bottom: var(--padding);
     padding: var(--padding);
     gap: var(--gap);
     z-index: 69;

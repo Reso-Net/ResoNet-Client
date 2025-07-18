@@ -90,6 +90,7 @@ button:disabled {
 
 .loginBanner {
     display: flex;
+    align-items: center;
     justify-content: center;
     gap: var(--gap);
 }
@@ -129,31 +130,32 @@ input {
 .loginPanel > div:nth-of-type(2) {
     display: flex;
     gap: var(--gap);
-    align-items: stretch;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .loginPanel > div:nth-of-type(2) > label {
     padding: var(--padding);
     background-color: var(--tertiaryColor);
     border-radius: var(--borderRadius);
-    flex-grow: 1;
+    flex-grow: 0;
 }
 
 .loginPanel > div:nth-of-type(3) {
     display: flex;
     gap: var(--gap);
-    align-items: stretch;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .loginPanel > div:nth-of-type(3) > label {
     padding: var(--padding);
     background-color: var(--tertiaryColor);
     border-radius: var(--borderRadius);
-    flex-grow: 1;
+    flex-grow: 0;
 }
 
 [type="checkbox"] {
-    background-color: var(--tertiaryColor);
     border-radius: var(--borderRadius);
     appearance: none;
     -webkit-appearance: none;
@@ -173,5 +175,6 @@ input {
 }
 
 [type="checkbox"]:disabled {
-    filter: brightness(0.75);
+    filter: brightness(0.5);
+    cursor:auto;
 }

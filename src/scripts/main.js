@@ -1,5 +1,6 @@
 const ResoNetLib = require("resonet-lib");
 const Config = require("./scripts/config");
+const { contain } = require("three/src/extras/TextureUtils.js");
 
 let config = new Config();
 let client;
@@ -86,6 +87,24 @@ function assignVariables() {
     userSearchInput.addEventListener("keydown", () => {
         clearTimeout(typingTimer);
     })
+
+    document.getElementById("totp").addEventListener("input", () => {  
+        modify2FAStuff();        
+    })
+}
+
+function modify2FAStuff() {
+    let totpInput = document.getElementById("totp");
+    let use2Fa = totpInput.value.trim() != "" || config?.loadedConfig?.user.use2fa;
+    let autoLogin = document.getElementById("autoLogin");
+    autoLogin.disabled = use2Fa;
+    autoLogin.checked = false;
+    if (use2Fa) {
+        autoLogin.parentElement.classList.add("hidden");
+    }
+    else {
+        autoLogin.parentElement.classList.remove("hidden");
+    }
 }
 
 async function attemptLogin() {
@@ -98,7 +117,9 @@ async function attemptLogin() {
     config.loadedConfig.user.username = document.getElementById("username").value;
     config.loadedConfig.user.password = document.getElementById("password").value;
     config.loadedConfig.user.rememberMe = document.getElementById("rememberMe").checked;
-    config.loadedConfig.user.autoLogin = document.getElementById("autoLogin").checked;
+    //let use2Fa = document.getElementById("totp").value.trim() != "";
+    //config.loadedConfig.user.autoLogin = !use2Fa && document.getElementById("autoLogin").checked;
+    //config.loadedConfig.user.use2fa = use2Fa;
 
     document.getElementById("rememberMe").disabled = true;
     document.getElementById("autoLogin").disabled = true;
@@ -172,9 +193,9 @@ async function loadAndUseConfig() {
 
     applyStylePreferences();
 
-    if (config.loadedConfig.user.autoLogin == true && config.loadedConfig.user.use2fa == false) {
-        await attemptLogin();
-    }
+    //if (config.loadedConfig.user.autoLogin == true && config.loadedConfig.user.use2fa == false) {
+    //    await attemptLogin();
+    //}
 }
 
 function saveConfig() {
