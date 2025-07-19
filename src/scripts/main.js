@@ -141,6 +141,10 @@ async function attemptLogin() {
         loginButon.style.fontStyle = "normal";
         document.querySelector(".page").classList.remove("hidden");
 
+        client.on("sessionUpdateEvent", async (session) => {
+            updateSessionItems(session);
+        });
+
         client.on("messageRecieveEvent", async (message) => {
             if (message.senderId == selectedUser.userId) {
                 createMessageItem(message);

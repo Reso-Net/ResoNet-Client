@@ -238,12 +238,14 @@ function processSessions(contact) {
 
         userWorldItem.style.backgroundColor = isPresent ? "var(--online)" : "var(--away)";
         userWorldItem.setAttribute("name", client.stripTags(session.name));
-        userWorldItem.setAttribute("sessionId", session.sessionId);
+        userWorldItem.setAttribute("sessionid", session.sessionId);
         userWorldItem.querySelector("img").src = session.thumbnailUrl ?? "./resources/public.svg";
         userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(session.name);
         userWorldItem.querySelectorAll("p")[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
         userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
         
+        //client.signalRConnection.send("ListenOnKey", )
+
         userWorlds.appendChild(userWorldItem);
     }
 }
