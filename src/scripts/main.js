@@ -1,6 +1,5 @@
 const ResoNetLib = require("resonet-lib");
 const Config = require("./scripts/config");
-const { contain } = require("three/src/extras/TextureUtils.js");
 
 let config = new Config();
 let client;
