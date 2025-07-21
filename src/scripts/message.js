@@ -1,0 +1,95 @@
+async function processMessages(user) {
+    const userMessages = document.getElementById("userMessages");
+    while(userMessages.hasChildNodes()) {
+        userMessages.lastChild.remove();
+    }
+
+    if (user.messages == null) await client.fetchMessages(user.userId);
+    if (user.messages == null) return;
+    if (user.userId != selectedUser.userId) return;
+
+    for (let index = 0; index < user.messages.length; index++) {
+        const message = user.messages[index];
+        await createMessageItem(message);
+    }
+}
+
+async function sendMessage(content) {
+    document.getElementById("userMessageInput").value = "";
+    let message = await client.sendMessage(selectedUser.userId, content)
+    createMessageItem(message);
+}
+
+function createMessageItem(message) {
+    const userMessages = document.getElementById("userMessages");
+    let itemFramgment;
+
+    if (message.messageType == "Text") itemFramgment = textMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "Sound") itemFramgment = audioMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "Object") itemFramgment = objectMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "SessionInvite") itemFramgment = sessionInviteMessageItemTemplate.content.cloneNode(true);
+    else if (message.messageType == "InviteRequest") itemFramgment = inviteRequestMessageItemTemplate.content.cloneNode(true);
+    else itemFramgment = textMessageItemTemplate.content.cloneNode(true);
+
+    let userMessageItem = itemFramgment.querySelector(".userMessageItem");
+
+    if (message.messageType == "Text") 
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(message.content);
+    else if (message.messageType == "Sound") {       
+        let content = JSON.parse(message.content);
+        let audio = userMessageItem.querySelector("audio");
+        let button = userMessageItem.querySelector("button");
+            
+        audio.src = client.formatAssetUrl(content.assetUri);
+        button.addEventListener("click", () => {
+        if (audio.paused) {
+            audio.play();
+            button.textContent = "Pause";
+        } else {
+            audio.pause();
+            button.textContent = "Play";
+        }
+        });
+
+        audio.addEventListener("ended", () => {
+            button.textContent = "Play";
+        });
+
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name)
+    } 
+    else if (message.messageType == "Object") {
+        let image = userMessageItem.querySelector("img");
+        let content = JSON.parse(message.content);
+
+        image.src = client.formatAssetUrl(content.thumbnailUri);
+        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
+    } 
+    else if (message.messageType == "SessionInvite") {
+        let content = JSON.parse(message.content);
+        let userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
+        let userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
+
+        userWorldItem.setAttribute("name", client.stripTags(content.name));
+        userWorldItem.setAttribute("sessionId", content.sessionId);
+        userWorldItem.querySelector("img").src = content.thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
+        userWorldItem.querySelectorAll("p")[1].textContent = content.hostUsername + ` (${content.joinedUsers}/${content.maxUsers})`
+        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
+
+        userMessageItem.querySelector("div").appendChild(userWorldItem)
+    } else if (message.messageType == "InviteRequest") {
+        let content = JSON.parse(message.content);
+        userMessageItem.querySelectorAll("p")[0].textContent = `${content.usernameToInvite} wants to join ${content.forSessionName}`;
+    }
+    else
+        userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED: " + message.messageType;
+
+    userMessageItem.lastElementChild.textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
+    userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
+    userMessages.appendChild(userMessageItem);
+
+    userMessages.scrollTo({
+        top: userMessages.scrollHeight,
+        behavior: "smooth"
+    });
+}

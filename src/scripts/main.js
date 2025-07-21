@@ -141,7 +141,16 @@ async function attemptLogin() {
         document.querySelector(".page").classList.remove("hidden");
 
         client.on("sessionUpdateEvent", async (session) => {
-            updateSessionItems(session);
+            updateAllSessionItems(session);
+        });
+
+        client.on("receiveStatusUpdate", async (status) => {
+            await updateUserItem(status);
+            sortUsers();
+        });
+
+        client.on("sessionRemoveEvent", async (sessionId) => {
+            removeSessionItemFromSelectedUser(sessionId);
         });
 
         client.on("messageRecieveEvent", async (message) => {
@@ -164,13 +173,12 @@ async function attemptLogin() {
             }
         });
 
-        client.on("receiveStatusUpdate", async (status) => {
-            await updateUserStatus(status);
-            sortUsers();
+        client.on("errorEvent", error => {
+            createToast("error", error);
         });
         
-        await client.data.users.forEach(user => {
-            createUser(user);
+        await client.data.users.forEach(async user => {
+            await createUserItem(user);
         });
 
         selectUser(client.data.userId);
@@ -195,10 +203,6 @@ async function loadAndUseConfig() {
     }
 
     applyStylePreferences();
-
-    //if (config.loadedConfig.user.autoLogin == true && config.loadedConfig.user.use2fa == false) {
-    //    await attemptLogin();
-    //}
 }
 
 function saveConfig() {

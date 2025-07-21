@@ -69,11 +69,18 @@
 }
 
 #badges img {
-    flex: 1 1 calc((100% - 8 * 4px) / 9); /* 9 items per row, subtract total gaps */
+    flex: 1 1 calc((100% - 8 * 4px) / 9); 
     max-width: calc((100% - 8 * 4px) / 9);
-    height: auto;               /* keep aspect ratio */
-    object-fit: contain;        /* scale image inside box */
-    aspect-ratio: 1 / 1;        /* force square container if you want square badges */
+    height: auto;
+    object-fit: contain;
+    aspect-ratio: 1 / 1;
+}
+
+#badges:not(:has(img)) {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
 
 #userWorlds {
@@ -86,6 +93,13 @@
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+#userWorlds:not(:has(button)) {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
 
 .userWorldItem {

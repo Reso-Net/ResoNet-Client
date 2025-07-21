@@ -74,7 +74,7 @@ async function filterUsers(query) {
     });
 }
 
-async function createUser(user) {
+async function createUserItem(user) {
     const existingUserItem = document.getElementById(user.userId)
     if (existingUserItem != null) return;
 
@@ -97,16 +97,18 @@ async function createUser(user) {
     await client.requestUserUpdate(user.userId);
 }
 
-async function updateUserStatus(status) {
-    let onlineStatus = status.sessionType == "Headless" ? "Headless" : status.onlineStatus;
-    const userItem = document.getElementById(status.userId);
+async function updateUserItem(status) {
+    const userItem = document.getElementById(status?.userId ?? "");
     if (userItem == null) return;
+    
+    let onlineStatus = status?.sessionType == "Headless" ? "Headless" : status?.onlineStatus ?? "Offline";
 
     userItem.setAttribute("status", onlineStatus);
     
     const userStatus = userItem.querySelector(".status");
     let session = await client.fetchUserSession(status.userId);
-    let sessionName = JSON.stringify(session);
+    
+    let sessionName = "";
     if (session?.name != null) {
         sessionName = client.stripTags(session.name);
     } else {
@@ -142,6 +144,8 @@ async function updateUserStatus(status) {
 async function selectUser(userId) {
     if (selectedUser != null && selectedUser.userId == userId) return; 
 
+    await client.requestUserUpdate(userId);
+
     selectedUser = await client.fetchUser(userId);
 
     const userProfile = document.querySelector("#userProfile");
@@ -163,6 +167,39 @@ async function selectUser(userId) {
     processBadges(selectedUser);
     processSessions(selectedUser);
     processMessages(selectedUser);
+}
+
+function processSelectedUserSessionItems(session) {
+    let items = document.getElementById("userWorlds").querySelectorAll(`[sessionid="${session.sessionId}"]`);
+    let isPresent = session.sessionUsers.find(user => user.userID === selectedUser.userId)?.isPresent;
+    if (items.length == 0) {
+        let userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
+        let userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
+        
+        userWorldItem.style.backgroundColor = isPresent ? "var(--online)" : "var(--away)";
+        userWorldItem.setAttribute("name", client.stripTags(session.name));
+        userWorldItem.setAttribute("sessionid", session.sessionId);
+        userWorldItem.querySelector("img").src = session.thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(session.name);
+        userWorldItem.querySelectorAll("p")[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
+        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
+        
+        userWorlds.appendChild(userWorldItem);
+    } else {
+        items.forEach(userWorldItem => {
+            userWorldItem.style.backgroundColor = isPresent ? "var(--online)" : "var(--away)";
+            userWorldItem.setAttribute("name", client.stripTags(session.name));
+            userWorldItem.querySelector("img").src = session.thumbnailUrl ?? "./resources/public.svg";
+            userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(session.name);
+            userWorldItem.querySelectorAll("p")[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
+            userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
+        });
+    }
+}
+
+async function removeSessionItemFromSelectedUser(sessionId) {
+    let userWorlds = document.getElementById("userWorlds");
+    userWorlds.childNodes.forEach(node => { if (node.getAttribute("sessionid") == sessionId) node.remove(); });
 }
 
 function processBadges(user) {
@@ -194,15 +231,8 @@ function processBadges(user) {
             break;
     }
     
-    if (!profileBadges.hasChildNodes()) {
-        document.getElementById("badges").classList.add("hidden");
-        return;
-    }
-    else document.getElementById("badges").classList.remove("hidden");
-    
     if (client.data.badges == null) return;
     
-    // Fix after
     const badges = user.currentUser?.tags
     if (badges == null) return;
     badges.forEach(badge => {
@@ -218,35 +248,18 @@ function processBadges(user) {
     });
 }
 
-function processSessions(contact) {
-    const sessionsIds = contact.currentSessions;
+function processSessions(user) {
+    const sessionsIds = user.currentSessions;
     const userWorlds = document.getElementById("userWorlds");
     while (userWorlds.hasChildNodes()) {
         userWorlds.removeChild(userWorlds.lastChild);
     }
 
-    if (sessionsIds == null || sessionsIds.length == 0) { 
-        document.getElementById("userWorlds").classList.add("hidden");
-        return;
-    }
-    else document.getElementById("userWorlds").classList.remove("hidden");
+    if (sessionsIds == null || sessionsIds.length == 0) return;
+    
     for (let index = 0; index < sessionsIds.length; index++) {
         const session = client.fetchSession(sessionsIds[index]);
-        let userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
-        let userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
-        let isPresent = session.sessionUsers.find(user => user.userID === contact.contactUserId)?.isPresent;
-
-        userWorldItem.style.backgroundColor = isPresent ? "var(--online)" : "var(--away)";
-        userWorldItem.setAttribute("name", client.stripTags(session.name));
-        userWorldItem.setAttribute("sessionid", session.sessionId);
-        userWorldItem.querySelector("img").src = session.thumbnailUrl ?? "./resources/public.svg";
-        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(session.name);
-        userWorldItem.querySelectorAll("p")[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
-        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
-        
-        //client.signalRConnection.send("ListenOnKey", )
-
-        userWorlds.appendChild(userWorldItem);
+        processSelectedUserSessionItems(session);
     }
 }
 
@@ -274,100 +287,4 @@ async function blockAvatar() {
 
 async function blockMutual() {
     console.log("Not implemented yet");
-}
-
-async function processMessages(user) {
-    const userMessages = document.getElementById("userMessages");
-    while(userMessages.hasChildNodes()) {
-        userMessages.lastChild.remove();
-    }
-
-    if (user.messages == null) await client.fetchMessages(user.userId);
-    if (user.messages == null) return;
-    if (user.userId != selectedUser.userId) return;
-
-    for (let index = 0; index < user.messages.length; index++) {
-        const message = user.messages[index];
-        await createMessageItem(message);
-    }
-}
-
-async function sendMessage(content) {
-    document.getElementById("userMessageInput").value = "";
-    let message = await client.sendMessage(selectedUser.userId, content)
-    createMessageItem(message);
-}
-
-function createMessageItem(message) {
-    const userMessages = document.getElementById("userMessages");
-    let itemFramgment;
-
-    if (message.messageType == "Text") itemFramgment = textMessageItemTemplate.content.cloneNode(true);
-    else if (message.messageType == "Sound") itemFramgment = audioMessageItemTemplate.content.cloneNode(true);
-    else if (message.messageType == "Object") itemFramgment = objectMessageItemTemplate.content.cloneNode(true);
-    else if (message.messageType == "SessionInvite") itemFramgment = sessionInviteMessageItemTemplate.content.cloneNode(true);
-    else if (message.messageType == "InviteRequest") itemFramgment = inviteRequestMessageItemTemplate.content.cloneNode(true);
-    else itemFramgment = textMessageItemTemplate.content.cloneNode(true);
-
-    let userMessageItem = itemFramgment.querySelector(".userMessageItem");
-
-    if (message.messageType == "Text") 
-        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(message.content);
-    else if (message.messageType == "Sound") {       
-        let content = JSON.parse(message.content);
-        let audio = userMessageItem.querySelector("audio");
-        let button = userMessageItem.querySelector("button");
-            
-        audio.src = client.formatAssetUrl(content.assetUri);
-        button.addEventListener("click", () => {
-        if (audio.paused) {
-            audio.play();
-            button.textContent = "Pause";
-        } else {
-            audio.pause();
-            button.textContent = "Play";
-        }
-        });
-
-        audio.addEventListener("ended", () => {
-            button.textContent = "Play";
-        });
-
-        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name)
-    } 
-    else if (message.messageType == "Object") {
-        let image = userMessageItem.querySelector("img");
-        let content = JSON.parse(message.content);
-
-        image.src = client.formatAssetUrl(content.thumbnailUri);
-        userMessageItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
-    } 
-    else if (message.messageType == "SessionInvite") {
-        let content = JSON.parse(message.content);
-        let userWorldItemFragment = userWorldItemTemplate.content.cloneNode(true);
-        let userWorldItem = userWorldItemFragment.querySelector(".userWorldItem");
-
-        userWorldItem.setAttribute("name", client.stripTags(content.name));
-        userWorldItem.setAttribute("sessionId", content.sessionId);
-        userWorldItem.querySelector("img").src = content.thumbnailUrl ?? "./resources/public.svg";
-        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
-        userWorldItem.querySelectorAll("p")[1].textContent = content.hostUsername + ` (${content.joinedUsers}/${content.maxUsers})`
-        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
-
-        userMessageItem.querySelector("div").appendChild(userWorldItem)
-    } else if (message.messageType == "InviteRequest") {
-        let content = JSON.parse(message.content);
-        userMessageItem.querySelectorAll("p")[0].textContent = `${content.usernameToInvite} wants to join ${content.forSessionName}`;
-    }
-    else
-        userMessageItem.querySelectorAll("p")[0].textContent = "MESSAGE TYPE UNSUPPORTED: " + message.messageType;
-
-    userMessageItem.lastElementChild.textContent = new Date(message.sendTime).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", day: "2-digit", month: "2-digit", year: "numeric", hour12: true, timeZone: "UTC" });
-    userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
-    userMessages.appendChild(userMessageItem);
-
-    userMessages.scrollTo({
-        top: userMessages.scrollHeight,
-        behavior: "smooth"
-    });
 }

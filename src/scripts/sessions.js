@@ -23,21 +23,14 @@ function closePopupPreview() {
     document.querySelector(".popup").classList.add("hidden");
 }
 
-function updateSessionItems(session) {
-    // Update user list current world
-    session.sessionUsers.forEach(user => {
-        //console.log(user.userID);
-        console.log(document.getElementById(user.userID));
-    })
-
-    // Update session items second so selected contact stuff
-    let items = document.querySelectorAll(`[sessionid="${session.sessionId}"]`);
-    if (items.length == 0) return; 
-    items.forEach(userWorldItem => {
-        userWorldItem.setAttribute("name", client.stripTags(session.name));
-        userWorldItem.querySelector("img").src = session.thumbnailUrl ?? "./resources/public.svg";
-        userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(session.name);
-        userWorldItem.querySelectorAll("p")[1].textContent = session.hostUsername + ` (${session.joinedUsers}/${session.maxUsers})`
-        userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
-    });
+function updateAllSessionItems(session) {
+    // Update selected user sessions
+    for (let index = 0; index < session.sessionUsers.length; index++) {
+        const user = session.sessionUsers[index];
+        const userData = client.fetchUser(user.userID);
+        if (userData != null) updateUserItem(userData.currentStatus);
+        if (user.userID == selectedUser.userId) {
+            processSelectedUserSessionItems(session);
+        }
+    }
 }

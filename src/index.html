@@ -19,6 +19,7 @@
         <script src="./scripts/settings.js"></script>
         <script src="./scripts/user.js"></script>
         <script src="./scripts/sessions.js"></script>
+        <script src="./scripts/message.js"></script>
         <script src="./scripts/main.js"></script>
 
         <template id="userItemTemplate">
@@ -166,14 +167,14 @@
                                 <img class="profilePicture">
                                 <p>User Info</p>
                             </div>
-                            <div class="hidden" id="badges"></div>
-                            <div class="hidden" id="userWorlds">
+                            <div id="badges"></div>
+                            <div id="userWorlds">
                                 <p>Insert session Item</p>
                             </div>
                         </div>
                         <div class="subPanel" id="actions">
                             <button class="pButton" onclick="addRemoveContact()">Add/Remove Contact</button>
-                            <div>
+                            <div class="hidden">
                                 <button class="pButton" onclick="blockContact()">Unblock</button>
                                 <button class="pButton" onclick="blockAvatar()">Block Avatar</button>
                                 <button class="pButton" onclick="blockMutual()">Mutual Block</button>
