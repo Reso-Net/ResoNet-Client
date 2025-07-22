@@ -177,9 +177,10 @@ async function attemptLogin() {
             createToast("error", error);
         });
         
-        await client.data.users.forEach(async user => {
+        for (let index = 0; index < client.data.users.length; index++) {
+            const user = client.data.users[index];
             await createUserItem(user);
-        });
+        }
 
         selectUser(client.data.userId);
     }).catch(error => {

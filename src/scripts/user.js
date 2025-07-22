@@ -95,6 +95,7 @@ async function createUserItem(user) {
 
     document.getElementById("userList").appendChild(userItemFragment);
     await client.requestUserUpdate(user.userId);
+    //userItem.style.filter = await client.fetchUnreadMessages(user.userId).length > 0 ? "brightness(5)" : "";
 }
 
 async function updateUserItem(status) {
