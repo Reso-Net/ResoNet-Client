@@ -24,7 +24,7 @@
 
         <template id="userItemTemplate">
             <button class="userItem" onclick="selectUser(this.id)">
-                <img class="profilePicture" src="./resources/contacts.svg">
+                <img class="profilePicture" onerror="this.src='./resources/contact.svg'">
                 <div>
                     <p class="status"></p>
                 </div>
@@ -33,7 +33,7 @@
 
         <template id="userWorldItemTemplate">
             <button class="userWorldItem" onclick="previewSession(this.getAttribute('sessionid'))">
-                <img class="profilePicture">
+                <img class="profilePicture" onerror="this.src='./resources/public.svg'">
                 <div>
                     <p></p>
                     <p></p>
@@ -66,7 +66,7 @@
 
         <template id="objectMessageItemTemplate">
             <div class="userMessageItem" type="Object">
-                <img>
+                <img onerror="this.src='./resources/error.svg'">
                 <p style="opacity: 50%;"></p>
                 <p style="opacity: 50%;"></p>
             </div>
@@ -164,7 +164,7 @@
                     <div id="userProfile">
                         <div class="subPanel" id="profile">
                             <div id="profileInfo">
-                                <img class="profilePicture">
+                                <img class="profilePicture" onerror="this.src='./resources/contact.svg'">
                                 <p>User Info</p>
                             </div>
                             <div id="badges"></div>

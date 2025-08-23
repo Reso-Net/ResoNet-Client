@@ -7,20 +7,24 @@ async function processMessages(user) {
     if (user.messages == null) await client.fetchMessages(user.userId);
     if (user.messages == null) return;
     if (user.userId != selectedUser.userId) return;
+    let reversedList = user.messages.reverse();
+    reversedList.forEach(async message => {
+        await createMessageItem(message, false);
+    });
 
-    for (let index = 0; index < user.messages.length; index++) {
-        const message = user.messages[index];
-        await createMessageItem(message);
-    }
+    userMessages.scrollTo({
+        top: userMessages.scrollHeight,
+        behavior: "smooth"
+    });
 }
 
 async function sendMessage(content) {
     document.getElementById("userMessageInput").value = "";
     let message = await client.sendMessage(selectedUser.userId, content)
-    createMessageItem(message);
+    await createMessageItem(message);
 }
 
-function createMessageItem(message) {
+function createMessageItem(message, scroll = true) {
     const userMessages = document.getElementById("userMessages");
     let itemFramgment;
 
@@ -71,7 +75,7 @@ function createMessageItem(message) {
 
         userWorldItem.setAttribute("name", client.stripTags(content.name));
         userWorldItem.setAttribute("sessionId", content.sessionId);
-        userWorldItem.querySelector("img").src = content.thumbnailUrl ?? "./resources/public.svg";
+        userWorldItem.querySelector("img").src = content.thumbnailUrl;
         userWorldItem.querySelectorAll("p")[0].textContent = client.stripTags(content.name);
         userWorldItem.querySelectorAll("p")[1].textContent = content.hostUsername + ` (${content.joinedUsers}/${content.maxUsers})`
         userWorldItem.querySelectorAll("p")[1].style.opacity = "50%";
@@ -88,8 +92,10 @@ function createMessageItem(message) {
     userMessageItem.setAttribute("ismine", message.senderId == client.data.userId);
     userMessages.appendChild(userMessageItem);
 
-    userMessages.scrollTo({
-        top: userMessages.scrollHeight,
-        behavior: "smooth"
-    });
+    if (scroll) {
+        userMessages.scrollTo({
+            top: userMessages.scrollHeight,
+            behavior: "smooth"
+        });
+    }
 }

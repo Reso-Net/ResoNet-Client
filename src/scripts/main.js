@@ -232,3 +232,7 @@ function getNoAssetReplacement() {
     let asset = `./resources/no_assets/noasset_${random}.png`;
     return asset;
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
