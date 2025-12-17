@@ -7,15 +7,16 @@ async function processMessages(user) {
     if (user.messages == null) await client.fetchMessages(user.userId);
     if (user.messages == null) return;
     if (user.userId != selectedUser.userId) return;
-    let reversedList = user.messages.reverse();
-    reversedList.forEach(async message => {
-        await createMessageItem(message, false);
+    const sortedMessages = sortMessagesOldestFirst(user.messages);
+    sortedMessages.forEach(msg => {
+        createMessageItem(msg, true);
     });
+}
 
-    userMessages.scrollTo({
-        top: userMessages.scrollHeight,
-        behavior: "smooth"
-    });
+function sortMessagesOldestFirst(messages) {
+    return [...messages].sort((a, b) =>
+        new Date(a.sendTime) - new Date(b.sendTime)
+    );
 }
 
 async function sendMessage(content) {
@@ -93,9 +94,11 @@ function createMessageItem(message, scroll = true) {
     userMessages.appendChild(userMessageItem);
 
     if (scroll) {
-        userMessages.scrollTo({
-            top: userMessages.scrollHeight,
-            behavior: "smooth"
-        });
+        userMessages.scrollTo({ top: userMessages.scrollHeight, behavior: "smooth" });
     }
+}
+
+async function scrollMessageList() {
+    const userMessages = document.getElementById("userMessages");
+    userMessages.scrollTo({ top: userMessages.scrollHeight, behavior: "smooth" });
 }

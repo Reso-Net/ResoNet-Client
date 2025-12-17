@@ -1,5 +1,6 @@
 const ResoNetLib = require("resonet-lib");
 const Config = require("./scripts/config");
+const { ipcRenderer } = require('electron')
 
 let config = new Config();
 let client;
@@ -15,57 +16,69 @@ let userWorldItemTemplate;
 let settingItemTemplate;
 let textMessageItemTemplate, audioMessageItemTemplate, objectMessageItemTemplate, sessionInviteMessageItemTemplate, inviteRequestMessageItemTemplate;
 
+let windowFocused = true;
+
 document.addEventListener("DOMContentLoaded", async (event) => {    
+    ipcRenderer.on('updateFocus', (_event, value) => {
+        windowFocused = value;
+    })
     assignVariables();
     await loadAndUseConfig();
 });
 
-function createToast(logLevel, content, icon = "", callback = null) {
-    let fragment = document.getElementById("toastItemTemplate").content.cloneNode(true);
-    let toastItem = fragment.querySelector(".toastItem");
-    toastItem.setAttribute("type", logLevel);
-    toastItem.querySelector("p").textContent = content;
-    document.getElementById("toastContainer").appendChild(toastItem);
-    
-    if (icon == "") {
-        switch(logLevel) {
-            case "log":
-                icon = "./resources/info.svg";
-                break;
-            case "warn":
-                icon = "./resources/warning.svg";
-                break;
-            case "error":
-                icon = "./resources/dangerous.svg";
-                break;
-            case "success":
-                icon = "./resources/check_circle.svg";
-                break;
-            case "unkown":
-                icon = "./resources/help.svg";
-                break;
+function createToast(logLevel, content, icon = "", callback = null, title = "") {
+    if (!windowFocused) {
+        let notification = new window.Notification(title, { body: content, silent: true, icon: icon });
+        notification.onclick = () => {
+            window.electronApi.focusWindow();
+            if (typeof callback === 'function') callback();
         }
-    }
+    } else {
+        let fragment = document.getElementById("toastItemTemplate").content.cloneNode(true);
+        let toastItem = fragment.querySelector(".toastItem");
+        toastItem.setAttribute("type", logLevel);
+        toastItem.querySelector("p").textContent = content;
+        document.getElementById("toastContainer").appendChild(toastItem);
+        
+        if (icon == "") {
+            switch(logLevel) {
+                case "log":
+                    icon = "./resources/info.svg";
+                    break;
+                case "warn":
+                    icon = "./resources/warning.svg";
+                    break;
+                case "error":
+                    icon = "./resources/dangerous.svg";
+                    break;
+                case "success":
+                    icon = "./resources/check_circle.svg";
+                    break;
+                case "unkown":
+                    icon = "./resources/help.svg";
+                    break;
+            }
+        }
 
-    if (typeof callback === 'function') {
-        toastItem.addEventListener("click", async () => { 
-            callback(); 
+        if (typeof callback === 'function') {
+            toastItem.addEventListener("click", async () => { 
+                callback(); 
+                toastItem.setAttribute("active", false);
+                setTimeout(() => { toastItem.remove(); }, 250);
+            });
+        }
+
+        toastItem.querySelector("img").src = icon;
+
+        setTimeout(() => {
+            toastItem.setAttribute("active", true);
+        }, 3);
+
+        setTimeout(() => {
             toastItem.setAttribute("active", false);
             setTimeout(() => { toastItem.remove(); }, 250);
-        });
-
+        }, 2500);
     }
-
-    toastItem.querySelector("img").src = icon;
-
-    setTimeout(() => {
-        toastItem.setAttribute("active", true);
-    }, 3);
-
-    setTimeout(() => {
-        toastItem.setAttribute("active", false);
-        setTimeout(() => { toastItem.remove(); }, 250);
-    }, 2500);
 }
 
 function assignVariables() {
@@ -107,7 +120,7 @@ function modify2FAStuff() {
 }
 
 async function attemptLogin() {
-    createToast("log", "Attempting to login");
+    createToast("log", "Attempting to login", "./resources/info.svg", null, "General Notification");
 
     loginButon.disabled = true;
     loginButon.style.fontStyle = "italic";
@@ -133,7 +146,7 @@ async function attemptLogin() {
 
     client = new ResoNetLib(clientConfig);
     await client.start().then(async () => {
-        createToast("success", "Successfully logged in!");
+        createToast("success", "Successfully logged in!", "./resources/info.svg", null, "General Notification");
         config.saveConfig();
 
         document.getElementById("loginPanel").classList.add("hidden");
