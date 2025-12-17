@@ -189,13 +189,15 @@ async function attemptLogin() {
         client.on("errorEvent", error => {
             createToast("error", error);
         });
+
+        applyProfileValues();
         
         for (let index = 0; index < client.data.users.length; index++) {
             const user = client.data.users[index];
             await createUserItem(user);
         }
 
-        selectUser(client.data.userId);
+        selectUser(client.data.userId);        
     }).catch(error => {
         loginButon.style.backgroundColor = "var(--busy)";
         loginButon.disabled = false;
@@ -204,6 +206,54 @@ async function attemptLogin() {
     });
 
     generateSettingsMenu();
+}
+
+async function applyProfileValues() {
+    const user = await client.fetchUser("U-LeCloutPanda");
+    const accountProfilePicture = document.getElementById("accountProfilePicture");
+    accountProfilePicture.src = client.formatAssetUrl(user.currentUser?.profile?.iconUrl) ?? "./resources/contact.svg";
+
+    const accountInfo = document.getElementById("accountInfo");
+
+    const accountName = document.createElement("p");
+    accountName.textContent = user.username + " (" + user.userId + ")";
+    accountInfo.appendChild(accountName);
+
+    const accountRegistrationDate = document.createElement("p");
+    try { accountRegistrationDate.textContent = "Registration Date: " + user.currentUser?.registrationDate; accountInfo.appendChild(accountRegistrationDate); }
+    catch { accountRegistrationDate.remove(); }
+
+    const accountOldRegistrationDate = document.createElement("p");
+    try { accountOldRegistrationDate.textContent = "Old Registration Date: " + user.currentUser?.migratedData?.registrationDate; accountInfo.appendChild(accountOldRegistrationDate); }
+    catch { accountOldRegistrationDate.remove(); }
+
+    const accountTagline = document.createElement("p");
+    try { accountTagline.textContent = "Tagline: " + user.currentUser?.profile?.tagline; accountInfo.appendChild(accountTagline); }
+    catch { accountTagline.remove(); }
+
+    const accountDescription = document.createElement("p");
+    try { accountDescription.textContent = "Description: " + user.currentUser?.profile?.description; accountInfo.appendChild(accountDescription); }
+    catch { accountDescription.remove(); }
+
+    const profileBadges = document.getElementById("accountBadges");
+    if (client.data.badges == null) return;
+    
+    const badges = user.currentUser?.tags
+    if (badges == null) return;
+    badges.forEach(badge => {
+        if (badge.startsWith("custom 3D badge")) return;
+        if (badge.startsWith("custom badge")) return;
+        
+        badge = client.data.badges[badge];
+        if (badge == null) return; 
+        console.log(badge);
+
+        const newBadge = document.createElement("img");
+        newBadge.classList.add("profileBadge");
+        const formattedBadgeUrl = true ? client.formatAssetUrl(badge) : badge;
+        newBadge.src = formattedBadgeUrl;
+        profileBadges.appendChild(newBadge);
+    });
 }
 
 async function loadAndUseConfig() {

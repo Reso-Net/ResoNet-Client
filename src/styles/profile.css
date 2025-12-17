@@ -56,7 +56,7 @@
     gap: var(--gap);
 }
 
-#badges {
+#profileBadges {
     border-radius: var(--borderRadius);
     border-style: solid;
     border-color: var(--tertiaryColor);
@@ -68,7 +68,7 @@
     align-content: flex-start;
 }
 
-#badges img {
+#profileBadges img {
     flex: 1 1 calc((100% - 8 * 4px) / 9); 
     max-width: calc((100% - 8 * 4px) / 9);
     height: auto;
@@ -76,7 +76,7 @@
     aspect-ratio: 1 / 1;
 }
 
-#badges:not(:has(img)) {
+#profileBadges:not(:has(img)) {
     display: none;
     visibility: hidden;
     width: 0;

@@ -1,0 +1,49 @@
+[name="home"] {
+    align-items: flex-start;
+}
+
+#accountBadges {
+    border-radius: var(--borderRadius);
+    border-style: solid;
+    border-color: var(--tertiaryColor);
+    background-color: var(--tertiaryColor);
+    display: flex;
+    padding: var(--padding);
+    gap: 4px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+#profileBadges img {
+    flex: 1 1 calc((100% - 8 * 4px) / 9); 
+    max-width: calc((100% - 8 * 4px) / 9);
+    height: auto;
+    object-fit: contain;
+    aspect-ratio: 1 / 1;
+}
+
+#accountBadges:not(:has(img)) {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+#accountInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+#accountInfo > p{
+    border-radius: var(--borderRadius);
+    border-style: solid;
+    border-color: var(--tertiaryColor);
+    background-color: var(--tertiaryColor);
+    padding: var(--padding);
+    white-space: pre-wrap;
+}
+
+#accountInfo .profilePicture {
+    min-width: 96px;
+}

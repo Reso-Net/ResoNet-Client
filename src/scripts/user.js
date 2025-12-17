@@ -204,7 +204,7 @@ async function removeSessionItemFromSelectedUser(sessionId) {
 }
 
 function processBadges(user) {
-    const profileBadges = document.getElementById("badges");
+    const profileBadges = document.getElementById("profileBadges");
     while (profileBadges.hasChildNodes()) {
         profileBadges.removeChild(profileBadges.lastChild);
     }
@@ -265,7 +265,7 @@ function processSessions(user) {
 }
 
 function createBadge(badgeUrl, format = true) {
-    const profileBadges = document.getElementById("badges");
+    const profileBadges = document.getElementById("profileBadges");
     const newBadge = document.createElement("img");
     newBadge.classList.add("profileBadge");
     const formattedBadgeUrl = format ? client.formatAssetUrl(badgeUrl) : badgeUrl;

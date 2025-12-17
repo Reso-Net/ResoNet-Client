@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        
+        <title>ResoNet-Client</title>
+        <link rel="icon" href="./resources/logo.ico">
+        <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/settings.css">
+        <link rel="stylesheet" href="styles/panels.css">
+        <link rel="stylesheet" href="styles/users.css">
+        <link rel="stylesheet" href="styles/profile.css">
+        <link rel="stylesheet" href="styles/messages.css">
+        <link rel="stylesheet" href="styles/toasts.css">
+        <link rel="stylesheet" href="styles/popup.css">
+        <link rel="stylesheet" href="styles/account.css">
+    </head>
+    
+    <body>
+        <div class="page">
+            <div class="navbar">
+                <button class="pButton" name="home" onclick="swapPanel(this.name)">
+                    <img src="./resources/home.svg">
+                </button>
+                <button class="pButton" name="contacts" onclick="swapPanel(this.name)">
+                    <img src="./resources/contacts.svg">
+                </button>
+                <button class="pButton" name="worlds" onclick="swapPanel(this.name)">
+                    <img src="./resources/public.svg">
+                </button>
+                <button class="pButton" name="settings" onclick="swapPanel(this.name)">
+                    <img src="./resources/settings.svg">
+                </button>
+            </div>
+
+            <div class="panels">
+                <div class="panel" name="home" >
+                    <div style="display: flex; flex-direction: row; align-items: stretch; gap: var(--gap); width: 100%;">
+                        <div style="display:flex; flex-direction: column; gap: var(--gap); min-width: calc(100vw / 4); max-width: calc(100vw / 4); ">
+                            <img src="./resources/contacts.svg" style="aspect-ratio 1 /1; padding: var( --padding); background-color: var(--secondaryColor); border-radius: var(--borderRadius);">
+                            <div id="accountBadges" style="background-color: var(--secondaryColor); justify-self: center; padding: var( --padding); border-radius: var(--borderRadius);">
+ 
+                            </div>
+                        </div>
+                        <div id="accountInfo"class="subPanel" style="flex: 1;">
+                            <p>Test</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
