@@ -4,8 +4,6 @@
 
 #accountBadges {
     border-radius: var(--borderRadius);
-    border-style: solid;
-    border-color: var(--tertiaryColor);
     background-color: var(--tertiaryColor);
     display: flex;
     padding: var(--padding);
