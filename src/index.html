@@ -118,7 +118,7 @@
                 <div>
                     <label>Remember Me</label>
                     <input type="checkbox" id="rememberMe" name="rememberMe">
-                </div>
+                </div> 
 
                 <div class="hidden">
                     <label>Auto Login</label>
@@ -146,12 +146,23 @@
             </div>
 
             <div class="panels">
-                <div class="panel" name="home" >
+                <div class="panel" name="home" style="max-height: 50%;" >
                     <div style="display: flex; flex-direction: row; align-items: stretch; gap: var(--gap); width: 100%;">
                         <div style="display:flex; flex-direction: column; gap: var(--gap); min-width: calc(100vw / 4); max-width: calc(100vw / 4); ">
                             <img id="accountProfilePicture" src="./resources/contacts.svg" style="aspect-ratio 1/1; padding: var( --padding); background-color: var(--secondaryColor); border-radius: var(--borderRadius);">
                             <div id="accountBadges" style="background-color: var(--secondaryColor); justify-self: center; padding: var( --padding); border-radius: var(--borderRadius);">
  
+                            </div>
+                            <div style="background-color: var(--secondaryColor); justify-self: center; padding: var( --padding); border-radius: var(--borderRadius);">
+                                <div style=" --fill: 69%; background: linear-gradient(
+                                    to right,
+                                    var(--primaryColor) 0%,
+                                    var(--primaryColor) var(--fill),
+                                    var(--tertiaryColor) var(--fill),
+                                    var(--tertiaryColor) 100%
+                                ); border-radius: var(--borderRadius); padding: calc(var(--padding) + var(--gap));">
+                                    <p id="accountStorage" style="color: var(--color);">69gb of 128gb</p>
+                                </div>
                             </div>
                         </div>
                         <div id="accountInfo" class="subPanel" style="flex: 1;"></div>

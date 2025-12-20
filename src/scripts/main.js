@@ -242,11 +242,14 @@ async function applyProfileValues() {
     if (badges == null) return;
     badges.forEach(badge => {
         if (badge.startsWith("custom 3D badge")) return;
-        if (badge.startsWith("custom badge")) return;
         
-        badge = client.data.badges[badge];
+        if (badge.startsWith("custom badge")) {
+            badge = badge.split(":")[1];
+        } else {
+            badge = client.data.badges[badge];
+        } 
+
         if (badge == null) return; 
-        console.log(badge);
 
         const newBadge = document.createElement("img");
         newBadge.classList.add("profileBadge");
@@ -254,6 +257,11 @@ async function applyProfileValues() {
         newBadge.src = formattedBadgeUrl;
         profileBadges.appendChild(newBadge);
     });
+
+    const storage = await client.fetchUserStorage("U-LeCloutPanda");
+    const accountStorage = document.getElementById("accountStorage");
+    accountStorage.innerText = `${(storage.usedBytes / Math.pow(1024, 3)).toFixed(2)} GB of ${(storage.quotaBytes / Math.pow(1024, 3)).toFixed(2)} GB`;
+    accountStorage.parentElement.style.setProperty("--fill", (storage.usedBytes / storage.quotaBytes).toFixed(2) * 100 + "%");
 }
 
 async function loadAndUseConfig() {
